@@ -1,0 +1,6 @@
+---
+import { getCollection } from 'astro:content';
+const books = (await getCollection('books', ({data}) => data.published)).sort((a,b) => a.data.order-b.data.order);
+const { compact = false } = Astro.props;
+---
+{books[0]?.data.amazon && <a class:list={['button', 'amazon', { compact }]} href={books[0].data.amazon} target="_blank" rel="noopener noreferrer">{compact ? 'Get the book' : 'Find it on Amazon'} <span aria-hidden="true">↗</span><span class="sr-only"> (opens in a new tab)</span></a>}
