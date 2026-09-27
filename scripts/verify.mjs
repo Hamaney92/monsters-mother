@@ -24,6 +24,9 @@ for(const file of files){
 }
 for(const file of ['rss.xml','robots.txt','sitemap-index.xml','sitemap-0.xml'])assert(fs.existsSync(path.join(root,file)),`Missing ${file}`);
 const sitemap=fs.readFileSync(path.join(root,'sitemap-0.xml'),'utf8');
-assert(!sitemap.includes('/read/'),'Reading placeholder must stay out of sitemap');
+assert(sitemap.includes('/read/'),'Chapter One must be included in sitemap');
+const reading=fs.readFileSync(path.join(root,'read/index.html'),'utf8');
+assert(reading.includes('The child moved before Elara was ready to look at him.'),'Chapter opening missing');
+assert(reading.includes('Elara tightened the shawl across her chest and took another step.'),'Chapter ending missing');
 assert(!sitemap.includes('/404'),'404 must stay out of sitemap');
 console.log(`Verified ${files.length} pages, ${links} local links/assets, unique titles, metadata, JSON-LD and feeds.`);

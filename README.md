@@ -39,9 +39,9 @@ Set the production branch to `main`. Every pushed Markdown change publishes auto
 
 - `src/content/blog/*.md`: articles. Copy an existing file, edit the front matter and body, commit. Filename becomes the URL. `draft: true` excludes an article from routes, listings, RSS and sitemap. Dates are explicit, not build times.
 - `src/content/books/*.md`: books. Add Book II/III with a new file, unique `order`, title, subtitle, description, author and optional Amazon URL. Set `published: true` when ready. The first published book supplies the global CTA; additional published books appear on Story.
-- `src/pages/[section].astro`: World and Lore summaries plus the reading-room placeholder. World and Lore draw only on the opening chapters.
+- `src/pages/[section].astro`: World and Lore summaries plus the reading room. World and Lore draw only on the opening chapters.
 - `src/data/archive.ts`: spoiler-light character profiles, each tagged with `bookId`.
-- The reading room remains a placeholder as requested. Before releasing the excerpt, replace its text, remove its `noindex` condition and remove `/read/` from the sitemap filter.
+- `src/content/chapters/book-one-chapter-one.md`: the complete opening chapter, copied verbatim from the active chapters-v04 source (body only; original headings become page headings). The reading room is included in the sitemap.
 - `src/site.ts`: global branding and navigation.
 - `src/styles/global.css`: colors, responsive layout and reduced-motion behavior.
 
@@ -51,7 +51,7 @@ The title, author YH and ASIN **B0HKYDF7BY** were transcribed from the supplied 
 
 The heroine and dragon are the exact artwork from the book project’s approved cover source (prepublication-v08), recovered through the “Mothers monster” task. No redesign was used in the final site. The hero tagline and synopsis reproduce the back-cover copy. World, Lore and character summaries are grounded in chapters 1, 3 and 6 of the active chapters-v04 manuscript. The four journal articles are original editorial starter copy for review, not research-backed scholarship. The video-to-book article links the identified MYTHRA source without making new affiliation or sequel claims.
 
-Before public launch: review the editorial articles, confirm the Amazon destination, choose the domain and release the manuscript excerpt if desired. Only Read remains explicitly marked coming soon, `noindex, follow`, and absent from the sitemap. No fictional locations, names or chapter text have been invented. The source manuscript itself is not copied into this repository.
+Before public launch: review the editorial articles, confirm the Amazon destination, choose the domain and review the extracted opening chapter. Chapter One is now available in the reading room. No fictional locations, names or chapter text have been invented. Only Chapter One is copied into this repository; the remaining manuscript stays in the book project.
 
 ## SEO and accessibility
 

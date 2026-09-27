@@ -34,6 +34,6 @@ Ember suggests something warm, vulnerable and capable of becoming larger. Within
 
 Start with the book’s story page, then meet Elara, Ember and the village healer Nessa in the character archive. Those introductions stay close to the opening chapters and avoid the later turns of the plot.
 
-The reading room will hold Chapter One, **The First Breath**, when the website excerpt is released. For now, the Amazon page provides the book listing and any sample offered in your region.
+You can now read Chapter One, **The First Breath**, free in the reading room. Begin with Elara in the cave, then continue the story in the book on Amazon.
 
 *They called him a monster. She called him her son.*
