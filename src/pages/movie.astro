@@ -4,12 +4,12 @@ import VideoPlayer from '../components/VideoPlayer.astro';
 import Amazon from '../components/Amazon.astro';
 import { path } from '../site';
 ---
-<Layout title="The Mothers Monster (2026): Watch the Film" description="Watch The Mothers Monster (2026), also titled She Gave Birth to a Dragon. Discover the fantasy film, its premise, and a dark fantasy novel by YH.">
+<Layout alternates={[{lang:'en',route:'movie/'},{lang:'fr',route:'fr/film/'},{lang:'ar',route:'ar/film/'},{lang:'x-default',route:'movie/'}]} title="The Mothers Monster (2026): Watch the Film" description="Watch The Mothers Monster (2026), also titled She Gave Birth to a Dragon. Discover the fantasy film, its premise, and a dark fantasy novel by YH.">
 <section class="section watch-page">
 <p class="eyebrow">THE FANTASY FILM · 2026</p>
 <h1>The Mothers<br/><em>Monster</em></h1>
 <p class="lead">Watch <i>The Mothers Monster</i> by MYTHRA, then discover <i>A Monster’s Mother: A Cradle Made of Embers</i>.</p>
-<VideoPlayer/>
+<nav aria-label="Page language"><a href={path('movie/')} lang="en">English</a> · <a href={path('fr/film/')} lang="fr">Français</a> · <a href={path('ar/film/')} lang="ar">العربية</a></nav><VideoPlayer/>
 <div class="film-notes">
 <h2>She Gave Birth to a Dragon</h2>
 <p>A young woman in a frozen mountain village gives birth to a dragon. While the village sees a threat, she sees her son. This is the premise of <i>The Mothers Monster</i>, the fantasy film published by MYTHRA on 14 September 2026.</p>
