@@ -1,0 +1,26 @@
+<div class="video-player" data-video-player>
+  <div class="video-prompt">
+    <p class="eyebrow">MYTHRA · THE MOTHERS MONSTER</p>
+    <p>She Gave Birth to a Dragon</p>
+    <button class="button" type="button">Load the video ▶</button>
+    <small>Loads YouTube’s privacy-enhanced player. YouTube receives connection data when you load it.</small>
+  </div>
+</div>
+<p class="video-source">Video by <a href="https://www.youtube.com/watch?v=dqCGNrQ6N_o" target="_blank" rel="noopener noreferrer">MYTHRA · Watch on YouTube ↗</a>. If playback is unavailable here, use this link.</p>
+<script>
+document.querySelectorAll<HTMLElement>('[data-video-player]').forEach(player => {
+  player.querySelector('button')?.addEventListener('click', () => {
+    const frame = document.createElement('iframe');
+    frame.src = 'https://www.youtube-nocookie.com/embed/dqCGNrQ6N_o';
+    frame.title = 'She Gave Birth to a Dragon | The Mothers Monster — MYTHRA';
+    frame.allow = 'encrypted-media; picture-in-picture; fullscreen';
+    frame.allowFullscreen = true;
+    frame.referrerPolicy = 'strict-origin-when-cross-origin';
+    player.replaceChildren(frame);
+    frame.focus();
+  });
+});
+</script>
+<style>
+.video-player{aspect-ratio:16/9;background:radial-gradient(ellipse at center,#45281e,#161615 75%);border:1px solid #65503c;display:grid;place-items:center;overflow:hidden}.video-prompt{padding:2rem;text-align:center;display:grid;justify-items:center;gap:1rem}.video-prompt>p:not(.eyebrow){font-family:Georgia,serif;font-size:clamp(1.4rem,4vw,3rem);margin:0}.video-prompt small{max-width:34rem;color:#c7bcae}.video-player :global(iframe){width:100%;height:100%;border:0}.video-source{font-size:1rem;color:#c7bcae}.video-source a{text-decoration:underline}@media(max-width:600px){.video-player{aspect-ratio:auto;min-height:300px}.video-player:has(iframe){aspect-ratio:16/9;min-height:0}.video-prompt{padding:1.4rem}}
+</style>

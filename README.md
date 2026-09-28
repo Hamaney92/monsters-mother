@@ -24,7 +24,7 @@ gh auth login
 gh repo create monsters-mother --public --source=. --remote=origin --push
 ```
 
-GitHub authentication was expired in the authoring environment, so no remote repository was created and no public deployment was performed.
+GitHub authentication works. Public repository creation awaits explicit confirmation that the code, artwork and Chapter One may be public. No deployment has been performed.
 
 ## Cloudflare Pages alternative
 
@@ -57,7 +57,7 @@ Before public launch: review the editorial articles, confirm the Amazon destinat
 
 Canonical URLs, Open Graph and Twitter cards, Book/WebSite/BlogPosting JSON-LD, sitemap index, robots.txt and RSS are generated. Structured data contains only supported fields. Default `example.com` builds are deliberately noindex and robots-blocked until `SITE_URL` is configured. Staging hosts should also be access-controlled or noindexed by their deployment configuration.
 
-Base-aware internal links work at `/` and a repository subpath. The layout includes a keyboard skip link, mobile menu with Escape support, focus outlines, responsive text and reduced-motion preferences. Google Fonts are requested externally with system fallbacks; artwork is local and optimized. No cookie banner is necessary for the current implementation because it sets no tracking cookies.
+Base-aware internal links work at `/` and a repository subpath. The layout includes a keyboard skip link, mobile menu with Escape support, focus outlines, responsive text and reduced-motion preferences. Google Fonts are requested externally with system fallbacks; artwork is local and optimized. The Watch page loads YouTube’s privacy-enhanced player only after a click. Review privacy disclosures when adding external services.
 
 ## Assets
 
@@ -65,3 +65,7 @@ Base-aware internal links work at `/` and a repository subpath. The layout inclu
 
 Astro collection API reference: https://docs.astro.build/en/guides/content-collections/
 Deployment reference: https://docs.astro.build/en/guides/deploy/github/
+
+## Video and future advertising
+
+The /watch/ page embeds MYTHRA video dqCGNrQ6N_o with attribution, no autoplay and a fallback YouTube link that works without JavaScript. No advertising is enabled. A marked insertion point below the player is reserved for future website ads. Choose a provider and configure account, privacy/consent requirements and layout before adding scripts. Website ads are separate from YouTube ads; embedding does not transfer YouTube advertising revenue to this site.

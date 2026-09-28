@@ -6,7 +6,7 @@ category: "Inside the book"
 ---
 **A Monster’s Mother: A Cradle Made of Embers** is an illustrated dark fantasy novel by **YH**, following Elara and her dragon child, Ember. Its central question is intimate: how do you care for a child when everyone around you sees a monster?
 
-If you arrived here after searching for *“she gave birth to a dragon”* or *“the mother’s monster”*, you may have been looking for the [MYTHRA video on YouTube](https://www.youtube.com/watch?v=dqCGNrQ6N_o). This page introduces the book **A Monster’s Mother**, its characters and its opening premise. It is not a film-streaming page or an announcement of a film sequel.
+If you arrived here after searching for *“she gave birth to a dragon”* or *“the mother’s monster”*, you may have been looking for the [MYTHRA video on YouTube](https://www.youtube.com/watch?v=dqCGNrQ6N_o). This page introduces the book **A Monster’s Mother**, its characters and its opening premise. You can also watch the original video on our Watch page, then explore the novel through the free opening chapter.
 
 ## A dragon child, not a weapon
 
