@@ -1,12 +1,16 @@
+---
+import {copy} from '../data/i18n';
+const {lang='en'}=Astro.props;const t=copy[lang];
+---
 <div class="video-player" data-video-player>
   <div class="video-prompt">
     <p class="eyebrow">MYTHRA · THE MOTHERS MONSTER</p>
     <p>She Gave Birth to a Dragon</p>
-    <button class="button" type="button">Load the video ▶</button>
-    <small>Loads YouTube’s privacy-enhanced player. YouTube receives connection data when you load it.</small>
+    <button class="button" type="button">{t?.load || 'Load the video'} ▶</button>
+    <small>{t?.privacy || 'Loads YouTube’s privacy-enhanced player. YouTube receives connection data when you load it.'}</small>
   </div>
 </div>
-<p class="video-source">Video by <a href="https://www.youtube.com/watch?v=dqCGNrQ6N_o" target="_blank" rel="noopener noreferrer">MYTHRA · Watch on YouTube ↗</a>. If playback is unavailable here, use this link.</p>
+<p class="video-source">Video by <a href="https://www.youtube.com/watch?v=dqCGNrQ6N_o" target="_blank" rel="noopener noreferrer">MYTHRA · {t?.youtube || 'Watch on YouTube'} ↗</a>{lang==='en' && '. If playback is unavailable here, use this link.'}</p>
 <script>
 document.querySelectorAll<HTMLElement>('[data-video-player]').forEach(player => {
   player.querySelector('button')?.addEventListener('click', () => {

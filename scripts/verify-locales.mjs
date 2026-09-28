@@ -1,0 +1,5 @@
+import fs from 'node:fs';import assert from 'node:assert/strict';
+const langs=['en','fr','ar','tr'];const routes=['','story','world','characters','lore','blog','movie','read','characters/elara','characters/ember','characters/nessa','blog/she-gave-birth-to-a-dragon','blog/monstrous-motherhood','blog/dark-fantasy-gothic-fantasy','blog/why-we-root-for-monsters'];
+const url=(l,r)=>l==='en'?(r?r+'/':''):l+'/'+(r?(r==='movie'?'film':r)+'/':'');
+for(const l of langs)for(const r of routes){const html=fs.readFileSync('dist/'+url(l,r)+'index.html','utf8');assert(html.includes('lang="'+l+'"'));if(l==='ar')assert(html.includes('dir="rtl"'));for(const other of langs){const link=html.match(new RegExp('hreflang="'+other+'" href="([^\"]+)"'));assert(link,'Missing alternate '+l+'/'+r+' '+other);assert(new URL(link[1]).pathname.endsWith('/'+url(other,r)),'Incorrect alternate '+link[1]);}if(l!=='en')assert(!html.includes('>Get the book<'),'Untranslated CTA');}
+console.log('Verified 60 equivalent pages across four languages, reciprocal hreflang and Arabic direction.');
