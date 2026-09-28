@@ -24,7 +24,7 @@ gh auth login
 gh repo create monsters-mother --public --source=. --remote=origin --push
 ```
 
-GitHub authentication works. Public repository creation awaits explicit confirmation that the code, artwork and Chapter One may be public. No deployment has been performed.
+Published at https://hamaney92.github.io/monsters-mother/ via GitHub Actions. Google Search Console verification is included in the shared layout.
 
 ## Cloudflare Pages alternative
 
@@ -69,3 +69,4 @@ Deployment reference: https://docs.astro.build/en/guides/deploy/github/
 ## Video and future advertising
 
 The /watch/ page embeds MYTHRA video dqCGNrQ6N_o with attribution, no autoplay and a fallback YouTube link that works without JavaScript. No advertising is enabled. A marked insertion point below the player is reserved for future website ads. Choose a provider and configure account, privacy/consent requirements and layout before adding scripts. Website ads are separate from YouTube ads; embedding does not transfer YouTube advertising revenue to this site.
+
