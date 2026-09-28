@@ -1,17 +1,5 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import VideoPlayer from '../components/VideoPlayer.astro';
-import Amazon from '../components/Amazon.astro';
 import { path } from '../site';
 ---
-<Layout title="Watch The Mothers Monster — MYTHRA" description="Watch MYTHRA’s She Gave Birth to a Dragon video, then meet Elara and Ember in A Monster’s Mother: A Cradle Made of Embers by YH.">
-<section class="section watch-page">
-<p class="eyebrow">ON SCREEN · MYTHRA</p>
-<h1>She Gave Birth<br/>to <em>a Dragon</em></h1>
-<p class="lead">Watch <i>The Mothers Monster</i> by MYTHRA, then discover <i>A Monster’s Mother: A Cradle Made of Embers</i>.</p>
-<VideoPlayer/>
-<!-- Future website advertising belongs below the player, never over its controls. No ad scripts are enabled. -->
-</section>
-<section class="book-band"><p class="eyebrow">DISCOVER THE BOOK · YH</p><h2>Meet Elara and Ember.</h2><p>A mother. A dragon child. A world that sees a monster.</p><div class="actions"><a class="button secondary" href={path('read/')}>Read Chapter One free →</a><Amazon/></div></section>
-</Layout>
-<style>.watch-page{max-width:1100px;margin:auto;padding-top:8rem}.watch-page h1{font-size:clamp(3rem,7vw,6rem);line-height:1.05}.watch-page .lead{max-width:760px;margin:2rem 0}.actions{justify-content:center;flex-wrap:wrap}</style>
+<Layout title="The film page has moved" noindex><section class="section" style="padding-top:8rem"><h1>Watch the film</h1><p><a class="button" href={path('movie/')}>Continue to The Mothers Monster →</a></p></section><script is:inline define:vars={{destination:path('movie/')}}>window.location.replace(destination);</script></Layout>

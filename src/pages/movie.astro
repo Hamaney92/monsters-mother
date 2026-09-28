@@ -1,0 +1,27 @@
+---
+import Layout from '../layouts/Layout.astro';
+import VideoPlayer from '../components/VideoPlayer.astro';
+import Amazon from '../components/Amazon.astro';
+import { path } from '../site';
+---
+<Layout title="The Mothers Monster (2026): Watch the Film" description="Watch The Mothers Monster (2026), also titled She Gave Birth to a Dragon. Discover the fantasy film, its premise, and a dark fantasy novel by YH.">
+<section class="section watch-page">
+<p class="eyebrow">THE FANTASY FILM · 2026</p>
+<h1>The Mothers<br/><em>Monster</em></h1>
+<p class="lead">Watch <i>The Mothers Monster</i> by MYTHRA, then discover <i>A Monster’s Mother: A Cradle Made of Embers</i>.</p>
+<VideoPlayer/>
+<div class="film-notes">
+<h2>She Gave Birth to a Dragon</h2>
+<p>A young woman in a frozen mountain village gives birth to a dragon. While the village sees a threat, she sees her son. This is the premise of <i>The Mothers Monster</i>, the fantasy film published by MYTHRA on 14 September 2026.</p>
+<h2>Where can I watch The Mothers Monster film?</h2>
+<p>Use the embedded YouTube player above, or follow the source link beneath it. The video is published under the title <i>She Gave Birth to a Dragon | The Mothers Monster | Full Fantasy Movie 4K</i>. Playback availability and language options are controlled by YouTube and the publisher.</p>
+<h2>Looking for the “Mother Monster movie”?</h2>
+<p>If you mean the story of a mother who gives birth to a dragon, the video above is <i>The Mothers Monster</i>. Similar wording can lead to unrelated films, so check the title and publisher.</p>
+<h2>The film and A Monster’s Mother: two titles to distinguish</h2>
+<p><i>The Mothers Monster</i> is the video title. <i>A Monster’s Mother: A Cradle Made of Embers</i> is the book by YH featured on this site. Explore Elara and Ember’s story in the free opening chapter below.</p>
+</div>
+<!-- Future website advertising belongs below the player, never over its controls. No ad scripts are enabled. -->
+</section>
+<section class="book-band"><p class="eyebrow">DISCOVER THE BOOK · YH</p><h2>Meet Elara and Ember.</h2><p>A mother. A dragon child. A world that sees a monster.</p><div class="actions"><a class="button secondary" href={path('read/')}>Read Chapter One free →</a><Amazon/></div></section>
+</Layout>
+<style>.watch-page{max-width:1100px;margin:auto;padding-top:8rem}.watch-page h1{font-size:clamp(3rem,7vw,6rem);line-height:1.05}.watch-page .lead{max-width:760px;margin:2rem 0}.actions{justify-content:center;flex-wrap:wrap}.film-notes{max-width:760px;margin:3rem auto 0}.film-notes h2{font-size:2rem;margin-top:2.5rem}.film-notes p{line-height:1.8}</style>
