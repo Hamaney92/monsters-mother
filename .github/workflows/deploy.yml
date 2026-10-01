@@ -24,10 +24,12 @@ jobs:
         uses: actions/configure-pages@v5
       - run: npm ci
       - run: npm run check
+      - run: npm run test:analytics
       - run: npm run build
         env:
           SITE_URL: https://mothersmonster.com
           BASE_PATH: /
+          PUBLIC_GA_MEASUREMENT_ID: G-EX3NWTTVFR
       - run: npm run verify
       - run: node scripts/verify-locales.mjs
       - uses: actions/upload-pages-artifact@v3

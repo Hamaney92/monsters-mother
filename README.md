@@ -1,6 +1,6 @@
 # A Monster’s Mother — website
 
-An Astro static website for **A Monster’s Mother: A Cradle Made of Embers**, by YH. Markdown publishing, no database, no visitor tracking, no client framework. Node 22.12+ required.
+An Astro static website for **A Monster’s Mother: A Cradle Made of Embers**, by YH. Markdown publishing, no database, optional consent-gated GA4 analytics, no client framework. Node 22.12+ required.
 
 ## Preview
 
@@ -58,6 +58,18 @@ Before public launch: review the editorial articles, confirm the Amazon destinat
 Canonical URLs, Open Graph and Twitter cards, Book/WebSite/BlogPosting JSON-LD, sitemap index, robots.txt and RSS are generated. Structured data contains only supported fields. Default `example.com` builds are deliberately noindex and robots-blocked until `SITE_URL` is configured. Staging hosts should also be access-controlled or noindexed by their deployment configuration.
 
 Base-aware internal links work at `/` and a repository subpath. The layout includes a keyboard skip link, mobile menu with Escape support, focus outlines, responsive text and reduced-motion preferences. Google Fonts are requested externally with system fallbacks; artwork is local and optimized. The Watch page loads YouTube’s privacy-enhanced player only after a click. Review privacy disclosures when adding external services.
+
+## Audience analytics
+
+Production: https://mothersmonster.com/ — GA4 account **digitaldetoxlabs** (384673037), property **Mothers Monster** (556921308), web stream **Mothers Monster — site web** (15931448631), public measurement ID **G-EX3NWTTVFR**.
+
+The GitHub Pages build sets `PUBLIC_GA_MEASUREMENT_ID`. Unset it and redeploy to disable the integration. The tag can load only on the configured `SITE_URL` origin; local previews never send production traffic. Run `npm run test:analytics` before deployment.
+
+The shared layout offers equal accept/refuse buttons in English, French, Arabic and Turkish. Basic consent mode: no Google Analytics script, requests or analytics cookies until explicit acceptance. The footer’s privacy control can reopen the notice and withdraw consent. Choices expire after 180 days; GA cookie expiry is capped at 180 days without renewal on every visit. Rejection/withdrawal clears this site's GA cookies and unloads the SDK. JavaScript disabled means analytics disabled.
+
+Data: page views, sessions, engagement, scrolls and a custom `amazon_click` event with a canonical product URL and page language. No purchase/conversion revenue is inferred from a click. Automatic outbound, search, form, video and file-download capture are disabled in the stream. URL query strings/fragments and external referrer paths are removed by this implementation; do not introduce personal data into page paths/titles. Google signals and ad personalization are disabled in the tag, and advertising consent remains denied. No Google Ads link is configured. Campaign query parameters are intentionally omitted; basic referral/direct traffic remains measurable.
+
+The on-site notice describes this analytics use and links Google's privacy policy. It is not a legal certification or a replacement for reviewing the publisher's full privacy obligations. Google Fonts and click-to-load YouTube are separate pre-existing services.
 
 ## Assets
 

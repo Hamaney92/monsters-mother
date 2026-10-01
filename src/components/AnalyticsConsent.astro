@@ -1,0 +1,41 @@
+---
+import { privacy } from '../data/privacy';
+const { lang = 'en' } = Astro.props;
+const t = privacy[lang] || privacy.en;
+const id = import.meta.env.PUBLIC_GA_MEASUREMENT_ID || '';
+const enabled = /^G-[A-Z0-9]+$/.test(id) && Astro.site?.hostname !== 'example.com';
+---
+{enabled && <div data-analytics-consent data-measurement-id={id} data-origin={Astro.site?.origin} data-granted={t.granted} data-denied={t.denied}>
+  <button type="button" class="privacy-settings" data-privacy-open aria-controls="privacy-panel" aria-expanded="false" hidden>{t.settings}</button>
+  <section id="privacy-panel" class="privacy-panel" aria-labelledby="privacy-title" hidden>
+    <h2 id="privacy-title" tabindex="-1">{t.title}</h2>
+    <p>{t.description}</p>
+    <div class="privacy-actions">
+      <button type="button" data-privacy-reject>{t.reject}</button>
+      <button type="button" data-privacy-accept>{t.accept}</button>
+      <button type="button" class="privacy-close" data-privacy-close>{t.close}</button>
+    </div>
+    <details><summary>{t.more}</summary><p>{t.details} <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">{t.policy} ↗</a></p></details>
+    <p data-privacy-status role="status" aria-live="polite"></p>
+  </section>
+</div>}
+<script>
+  import { initAnalytics } from '../lib/analytics';
+  const root = document.querySelector<HTMLElement>('[data-analytics-consent]');
+  if (root) initAnalytics(root);
+</script>
+<style>
+  .privacy-settings{border:0;background:none;color:inherit;text-decoration:underline;text-underline-offset:3px;padding:0;cursor:pointer;font-size:inherit}
+  .privacy-panel{position:fixed;inset-inline:18px;bottom:18px;z-index:90;margin-inline:auto;max-width:900px;max-height:calc(100dvh - 36px);overflow:auto;padding:24px;background:#191816;color:#eee5d3;border:1px solid #cd9c6c;box-shadow:0 12px 65px #0009;text-align:start;font-size:.9rem}
+  .privacy-panel[hidden],.privacy-settings[hidden]{display:none}
+  .privacy-panel h2{font-family:Manrope,Arial,sans-serif;font-size:1.1rem;font-weight:700;line-height:1.5}
+  .privacy-panel p{font-size:.85rem;line-height:1.65;margin:10px 0 16px;color:#ddd3c5}
+  .privacy-actions{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+  .privacy-actions button{border:1px solid #cd9c6c;background:#191816;color:#eee5d3;padding:11px 16px;min-height:44px;font-size:.85rem;font-weight:600;cursor:pointer}
+  .privacy-actions button:hover{background:#3b342c}
+  .privacy-actions .privacy-close{margin-inline-start:auto;border-color:#74695c}
+  .privacy-panel summary{cursor:pointer;padding:6px 0;color:#d5b18a;line-height:1.5}
+  .privacy-panel a{text-decoration:underline;text-underline-offset:3px}
+  .privacy-panel [data-privacy-status]:empty{display:none}
+  @media(max-width:600px){.privacy-panel{inset-inline:10px;bottom:10px;max-height:calc(100dvh - 20px);padding:18px}.privacy-actions{display:grid;grid-template-columns:1fr 1fr}.privacy-actions .privacy-close{margin-inline-start:0;grid-column:1/-1}.privacy-panel p{font-size:.8rem}}
+</style>
