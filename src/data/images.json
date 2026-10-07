@@ -1,0 +1,415 @@
+{
+  "brand-dragon.png": {
+    "width": 1254,
+    "height": 1254,
+    "originalBytes": 1728133,
+    "variants": [
+      {
+        "width": 128,
+        "avif": "optimized/brand-dragon-128-77cd51ad91.avif",
+        "avifBytes": 6320,
+        "webp": "optimized/brand-dragon-128-8e2f48dbdf.webp",
+        "webpBytes": 8120
+      },
+      {
+        "width": 256,
+        "avif": "optimized/brand-dragon-256-bdd704d72d.avif",
+        "avifBytes": 13081,
+        "webp": "optimized/brand-dragon-256-bf4d132294.webp",
+        "webpBytes": 21090
+      }
+    ]
+  },
+  "cave-scene.webp": {
+    "width": 1200,
+    "height": 800,
+    "originalBytes": 168602,
+    "variants": [
+      {
+        "width": 480,
+        "avif": "optimized/cave-scene-480-88112df580.avif",
+        "avifBytes": 20242,
+        "webp": "optimized/cave-scene-480-cfe738afbf.webp",
+        "webpBytes": 27696
+      },
+      {
+        "width": 768,
+        "avif": "optimized/cave-scene-768-f208678833.avif",
+        "avifBytes": 43534,
+        "webp": "optimized/cave-scene-768-1dd1bf478a.webp",
+        "webpBytes": 58510
+      },
+      {
+        "width": 1200,
+        "avif": "optimized/cave-scene-1200-f623a48c29.avif",
+        "avifBytes": 100548,
+        "webp": "optimized/cave-scene-1200-5190824be5.webp",
+        "webpBytes": 142108
+      }
+    ]
+  },
+  "cover-art.webp": {
+    "width": 1024,
+    "height": 1536,
+    "originalBytes": 273312,
+    "variants": [
+      {
+        "width": 480,
+        "avif": "optimized/cover-art-480-b8a3c83bc2.avif",
+        "avifBytes": 43266,
+        "webp": "optimized/cover-art-480-cf65ae4f65.webp",
+        "webpBytes": 59094
+      },
+      {
+        "width": 768,
+        "avif": "optimized/cover-art-768-071f657119.avif",
+        "avifBytes": 86930,
+        "webp": "optimized/cover-art-768-3651333ab4.webp",
+        "webpBytes": 114880
+      },
+      {
+        "width": 1024,
+        "avif": "optimized/cover-art-1024-532c4527fb.avif",
+        "avifBytes": 144592,
+        "webp": "optimized/cover-art-1024-020fd74a5d.webp",
+        "webpBytes": 201638
+      }
+    ]
+  },
+  "elara-scene.webp": {
+    "width": 1024,
+    "height": 1536,
+    "originalBytes": 203306,
+    "variants": [
+      {
+        "width": 480,
+        "avif": "optimized/elara-scene-480-d582a40b7b.avif",
+        "avifBytes": 37490,
+        "webp": "optimized/elara-scene-480-70ecd839bc.webp",
+        "webpBytes": 50358
+      },
+      {
+        "width": 768,
+        "avif": "optimized/elara-scene-768-d08cf4f0fe.avif",
+        "avifBytes": 75117,
+        "webp": "optimized/elara-scene-768-20db91b267.webp",
+        "webpBytes": 98536
+      },
+      {
+        "width": 1024,
+        "avif": "optimized/elara-scene-1024-dda24890f1.avif",
+        "avifBytes": 121938,
+        "webp": "optimized/elara-scene-1024-e8839aebd4.webp",
+        "webpBytes": 165630
+      }
+    ]
+  },
+  "ember-scene.webp": {
+    "width": 1024,
+    "height": 1536,
+    "originalBytes": 256782,
+    "variants": [
+      {
+        "width": 480,
+        "avif": "optimized/ember-scene-480-80580b56f1.avif",
+        "avifBytes": 48433,
+        "webp": "optimized/ember-scene-480-2beebca015.webp",
+        "webpBytes": 70986
+      },
+      {
+        "width": 768,
+        "avif": "optimized/ember-scene-768-12fca1f4b1.avif",
+        "avifBytes": 96059,
+        "webp": "optimized/ember-scene-768-a8d46b7838.webp",
+        "webpBytes": 135318
+      },
+      {
+        "width": 1024,
+        "avif": "optimized/ember-scene-1024-3875a61984.avif",
+        "avifBytes": 155803,
+        "webp": "optimized/ember-scene-1024-4d85308b99.webp",
+        "webpBytes": 223858
+      }
+    ]
+  },
+  "healer-art.webp": {
+    "width": 1000,
+    "height": 1500,
+    "originalBytes": 202796,
+    "variants": [
+      {
+        "width": 480,
+        "avif": "optimized/healer-art-480-a9bb07dc29.avif",
+        "avifBytes": 36343,
+        "webp": "optimized/healer-art-480-b36acd0f83.webp",
+        "webpBytes": 53302
+      },
+      {
+        "width": 768,
+        "avif": "optimized/healer-art-768-6f33a2fbf0.avif",
+        "avifBytes": 70989,
+        "webp": "optimized/healer-art-768-37b954f784.webp",
+        "webpBytes": 101398
+      },
+      {
+        "width": 1000,
+        "avif": "optimized/healer-art-1000-98ae55a91e.avif",
+        "avifBytes": 115255,
+        "webp": "optimized/healer-art-1000-be62027fbc.webp",
+        "webpBytes": 173926
+      }
+    ]
+  },
+  "hearth-scene.webp": {
+    "width": 1200,
+    "height": 800,
+    "originalBytes": 203474,
+    "variants": [
+      {
+        "width": 480,
+        "avif": "optimized/hearth-scene-480-b790453ae7.avif",
+        "avifBytes": 20372,
+        "webp": "optimized/hearth-scene-480-03ceb13185.webp",
+        "webpBytes": 30408
+      },
+      {
+        "width": 768,
+        "avif": "optimized/hearth-scene-768-cfb1c5fc9e.avif",
+        "avifBytes": 45719,
+        "webp": "optimized/hearth-scene-768-cdafac9f3a.webp",
+        "webpBytes": 67260
+      },
+      {
+        "width": 1200,
+        "avif": "optimized/hearth-scene-1200-66e4914b74.avif",
+        "avifBytes": 111473,
+        "webp": "optimized/hearth-scene-1200-15158a865a.webp",
+        "webpBytes": 169868
+      }
+    ]
+  },
+  "journal-birth.webp": {
+    "width": 1200,
+    "height": 800,
+    "originalBytes": 62542,
+    "variants": [
+      {
+        "width": 480,
+        "avif": "optimized/journal-birth-480-35eb6a6970.avif",
+        "avifBytes": 9594,
+        "webp": "optimized/journal-birth-480-8eb4eeb4af.webp",
+        "webpBytes": 11524
+      },
+      {
+        "width": 768,
+        "avif": "optimized/journal-birth-768-c96efc92b5.avif",
+        "avifBytes": 19215,
+        "webp": "optimized/journal-birth-768-87ea9afeba.webp",
+        "webpBytes": 22592
+      },
+      {
+        "width": 1200,
+        "avif": "optimized/journal-birth-1200-a5d800a1e6.avif",
+        "avifBytes": 39321,
+        "webp": "optimized/journal-birth-1200-e674f0bd2a.webp",
+        "webpBytes": 50252
+      }
+    ]
+  },
+  "journal-gothic.webp": {
+    "width": 1200,
+    "height": 800,
+    "originalBytes": 182438,
+    "variants": [
+      {
+        "width": 480,
+        "avif": "optimized/journal-gothic-480-2759838386.avif",
+        "avifBytes": 20615,
+        "webp": "optimized/journal-gothic-480-21439bf517.webp",
+        "webpBytes": 27124
+      },
+      {
+        "width": 768,
+        "avif": "optimized/journal-gothic-768-e2e3ac263e.avif",
+        "avifBytes": 45215,
+        "webp": "optimized/journal-gothic-768-a0c0174e7d.webp",
+        "webpBytes": 60012
+      },
+      {
+        "width": 1200,
+        "avif": "optimized/journal-gothic-1200-3e31a2d623.avif",
+        "avifBytes": 109490,
+        "webp": "optimized/journal-gothic-1200-464932c5e1.webp",
+        "webpBytes": 149692
+      }
+    ]
+  },
+  "journal-monsters.webp": {
+    "width": 1200,
+    "height": 800,
+    "originalBytes": 93894,
+    "variants": [
+      {
+        "width": 480,
+        "avif": "optimized/journal-monsters-480-d7dc4275c4.avif",
+        "avifBytes": 13817,
+        "webp": "optimized/journal-monsters-480-17ca0b407c.webp",
+        "webpBytes": 16634
+      },
+      {
+        "width": 768,
+        "avif": "optimized/journal-monsters-768-701e3c59e7.avif",
+        "avifBytes": 27075,
+        "webp": "optimized/journal-monsters-768-2e06bc4a77.webp",
+        "webpBytes": 33572
+      },
+      {
+        "width": 1200,
+        "avif": "optimized/journal-monsters-1200-73c9c47593.avif",
+        "avifBytes": 55104,
+        "webp": "optimized/journal-monsters-1200-bd37f30992.webp",
+        "webpBytes": 72780
+      }
+    ]
+  },
+  "journal-motherhood.webp": {
+    "width": 1200,
+    "height": 800,
+    "originalBytes": 57066,
+    "variants": [
+      {
+        "width": 480,
+        "avif": "optimized/journal-motherhood-480-c1fcf69d8a.avif",
+        "avifBytes": 8534,
+        "webp": "optimized/journal-motherhood-480-4340a9c8eb.webp",
+        "webpBytes": 10130
+      },
+      {
+        "width": 768,
+        "avif": "optimized/journal-motherhood-768-b2db78af57.avif",
+        "avifBytes": 17105,
+        "webp": "optimized/journal-motherhood-768-ca0135cd4f.webp",
+        "webpBytes": 20194
+      },
+      {
+        "width": 1200,
+        "avif": "optimized/journal-motherhood-1200-047cf36b65.avif",
+        "avifBytes": 35939,
+        "webp": "optimized/journal-motherhood-1200-881ca87292.webp",
+        "webpBytes": 45402
+      }
+    ]
+  },
+  "lore-art.webp": {
+    "width": 1000,
+    "height": 667,
+    "originalBytes": 139416,
+    "variants": [
+      {
+        "width": 480,
+        "avif": "optimized/lore-art-480-64076e0252.avif",
+        "avifBytes": 22257,
+        "webp": "optimized/lore-art-480-311c04b37a.webp",
+        "webpBytes": 32766
+      },
+      {
+        "width": 768,
+        "avif": "optimized/lore-art-768-709afe3f38.avif",
+        "avifBytes": 45211,
+        "webp": "optimized/lore-art-768-ae8b15321a.webp",
+        "webpBytes": 66854
+      },
+      {
+        "width": 1000,
+        "avif": "optimized/lore-art-1000-1168c8494f.avif",
+        "avifBytes": 76978,
+        "webp": "optimized/lore-art-1000-7a72627ea8.webp",
+        "webpBytes": 118392
+      }
+    ]
+  },
+  "nessa-scene.webp": {
+    "width": 1024,
+    "height": 1536,
+    "originalBytes": 187170,
+    "variants": [
+      {
+        "width": 480,
+        "avif": "optimized/nessa-scene-480-11352943a5.avif",
+        "avifBytes": 27777,
+        "webp": "optimized/nessa-scene-480-5f2990d46f.webp",
+        "webpBytes": 35960
+      },
+      {
+        "width": 768,
+        "avif": "optimized/nessa-scene-768-ce8acec9b6.avif",
+        "avifBytes": 59520,
+        "webp": "optimized/nessa-scene-768-6db42c70ed.webp",
+        "webpBytes": 74204
+      },
+      {
+        "width": 1024,
+        "avif": "optimized/nessa-scene-1024-64e821c28f.avif",
+        "avifBytes": 107475,
+        "webp": "optimized/nessa-scene-1024-5217db7de1.webp",
+        "webpBytes": 146798
+      }
+    ]
+  },
+  "shawl-scene.webp": {
+    "width": 1200,
+    "height": 800,
+    "originalBytes": 160082,
+    "variants": [
+      {
+        "width": 480,
+        "avif": "optimized/shawl-scene-480-bc104af5ab.avif",
+        "avifBytes": 18485,
+        "webp": "optimized/shawl-scene-480-61dd45ccfb.webp",
+        "webpBytes": 28048
+      },
+      {
+        "width": 768,
+        "avif": "optimized/shawl-scene-768-1aa1e3f74d.avif",
+        "avifBytes": 38750,
+        "webp": "optimized/shawl-scene-768-2651542498.webp",
+        "webpBytes": 58818
+      },
+      {
+        "width": 1200,
+        "avif": "optimized/shawl-scene-1200-217df48d3a.avif",
+        "avifBytes": 84267,
+        "webp": "optimized/shawl-scene-1200-18792ae9b7.webp",
+        "webpBytes": 133346
+      }
+    ]
+  },
+  "world-art.webp": {
+    "width": 1000,
+    "height": 667,
+    "originalBytes": 153716,
+    "variants": [
+      {
+        "width": 480,
+        "avif": "optimized/world-art-480-7646e6432e.avif",
+        "avifBytes": 23022,
+        "webp": "optimized/world-art-480-9ba1dc6ec4.webp",
+        "webpBytes": 33032
+      },
+      {
+        "width": 768,
+        "avif": "optimized/world-art-768-d7700cf8f6.avif",
+        "avifBytes": 48974,
+        "webp": "optimized/world-art-768-3cabdf9f58.webp",
+        "webpBytes": 69966
+      },
+      {
+        "width": 1000,
+        "avif": "optimized/world-art-1000-d649e0ab54.avif",
+        "avifBytes": 91418,
+        "webp": "optimized/world-art-1000-d329d4320d.webp",
+        "webpBytes": 134874
+      }
+    ]
+  }
+}

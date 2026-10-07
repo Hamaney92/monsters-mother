@@ -1,0 +1,17 @@
+---
+import type {HTMLAttributes} from 'astro/types';
+import images from '../data/images.json';
+import {path} from '../site';
+interface Props extends HTMLAttributes<'img'> { src:string; alt:string; }
+const {src,alt,width:_width,height:_height,sizes:providedSizes,...attributes}=Astro.props;
+const key=src.split('/').pop() as keyof typeof images;
+const image=images[key];
+if(!image) throw new Error(`Missing optimized image: ${src}`);
+const isBrand=key==='brand-dragon.png';
+const isHero=attributes.class==='hero-art';
+const isCard=attributes.class==='portal-image' || attributes.loading==='lazy';
+const sizes=providedSizes || (isBrand?'(max-width: 700px) 40px, 70px':isHero?'(max-width: 960px) 100vw, 59vw':isCard?'(max-width: 700px) 100vw, (max-width: 960px) 50vw, 40vw':'(max-width: 960px) 100vw, 900px');
+const srcset=(format:'avif'|'webp')=>image.variants.map(v=>`${path(v[format])} ${v.width}w`).join(', ');
+const fallback=image.variants[image.variants.length-1];
+---
+<picture style="display:contents"><source type="image/avif" srcset={srcset('avif')} sizes={sizes}/><img {...attributes} src={path(fallback.webp)} srcset={srcset('webp')} sizes={sizes} alt={alt} width={image.width} height={image.height} decoding={isHero?'sync':'async'}/></picture>
