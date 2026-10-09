@@ -2,11 +2,12 @@
 title: "She gave birth to a dragon. What happens after the first breath?"
 description: "Discover Elara and Ember in A Monster’s Mother, an illustrated dark fantasy novel about raising a dragon child."
 date: 2026-09-27T12:00:00Z
+modified: 2026-10-09
 category: "Inside the book"
 ---
 **A Monster’s Mother: A Cradle Made of Embers** is an illustrated dark fantasy novel by **YH**, following Elara and her dragon child, Ember. Its central question is intimate: how do you care for a child when everyone around you sees a monster?
 
-If you arrived here after searching for *“she gave birth to a dragon”* or *“the mother’s monster”*, you may have been looking for the [MYTHRA video on YouTube](https://www.youtube.com/watch?v=dqCGNrQ6N_o). This page introduces the book **A Monster’s Mother**, its characters and its opening premise. You can also watch the original video on our Watch page, then explore the novel through the free opening chapter.
+If you arrived here after searching for *“she gave birth to a dragon”* or *“the mother’s monster”*, you may have been looking for the [MYTHRA video on YouTube](https://www.youtube.com/watch?v=dqCGNrQ6N_o). This page introduces the book **A Monster’s Mother**, its characters and its opening premise. You can also [watch the original video on our film page](/movie/), then explore the novel through the free opening chapter.
 
 ## A dragon child, not a weapon
 
@@ -32,8 +33,8 @@ Ember suggests something warm, vulnerable and capable of becoming larger. Within
 
 ## Where to begin
 
-Start with the book’s story page, then meet Elara, Ember and the village healer Nessa in the character archive. Those introductions stay close to the opening chapters and avoid the later turns of the plot.
+Start with [the book’s story page](/story/), then meet [Elara](/characters/elara/), [Ember](/characters/ember/) and [the village healer Nessa](/characters/nessa/). Those introductions stay close to the opening chapters and avoid the later turns of the plot.
 
-You can now read Chapter One, **The First Breath**, free in the reading room. Begin with Elara in the cave, then continue the story in the book on Amazon.
+You can now [read Chapter One, **The First Breath**, free in English](/read/), with no signup. Begin with Elara in the cave, then continue the story in the book on Amazon.
 
 *They called him a monster. She called him her son.*

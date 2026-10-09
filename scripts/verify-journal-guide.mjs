@@ -22,4 +22,16 @@ for(const link of ['/story/','/read/','/characters/ember/','/blog/monstrous-moth
 }
 assert(html.includes('not a scene from our novel'),'Keep invented examples separate from book scenes');
 assert(html.includes('https://www.britishlibrary.cn/en/articles/gothic-motifs/'),'Keep the literary source');
-console.log('Verified genre guide, original date, visible update, literary source and book discovery links.');
+const introduction=fs.readFileSync('dist/blog/she-gave-birth-to-a-dragon/index.html','utf8');
+const introductionBody=introduction.match(/<div class="prose"[^>]*>([\s\S]*?)<nav class="reading-path"/);
+assert(introductionBody,'Find the article body before the existing navigation');
+for(const link of ['/movie/','/story/','/characters/elara/','/characters/ember/','/characters/nessa/','/read/']) {
+  assert(introductionBody[1].includes(`href="${link}"`),`Introduction must link its in-text reference: ${link}`);
+}
+const introductionArticle=[...introduction.matchAll(/<script type="application\/ld\+json">(.*?)<\/script>/gs)]
+  .map(match=>JSON.parse(match[1])).find(node=>node['@type']==='BlogPosting');
+assert.equal(introductionArticle?.datePublished,'2026-09-27T12:00:00.000Z');
+assert.equal(introductionArticle?.dateModified,'2026-10-09T00:00:00.000Z');
+assert(introduction.includes('Updated <time'),'Introduction must disclose its update');
+assert(introductionBody[1].includes('free in English'),'Introduction must state the chapter language');
+console.log('Verified genre guide and book introduction, original dates, visible updates, sources and contextual reading links.');
