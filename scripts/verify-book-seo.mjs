@@ -72,3 +72,17 @@ assert(elara.includes('OPENING-CHAPTER SPOILERS ONLY'),'Make Elara spoiler scope
 for(const route of ['read/','characters/ember/','blog/monstrous-motherhood/','story/']) assert(elara.includes(`href="/${route}"`),`Missing Elara reading route: ${route}`);
 assert(elara.includes('free in English, without signing up'),'Describe the actual free reading offer');
 console.log('Verified book metadata, real responsive paperback preview, grounded Elara and Ember guides, reader answers and chapter navigation in four languages.');
+for (const [lang,detailsTitle,englishLabel,freeQuestion] of [
+  ['fr','L’édition brochée','Anglais','Le livre entier est-il gratuit ?'],
+  ['tr','Basılı kitap bilgileri','İngilizce','Kitabın tamamı ücretsiz mi?'],
+  ['ar','تفاصيل النسخة الورقية','الإنجليزية','هل الكتاب كاملًا مجاني؟']
+]) {
+  const translated=fs.readFileSync(`dist/${lang}/story/index.html`,'utf8');
+  const guide=translated.match(/<section class="localized-book-guide"[^>]*>([\s\S]*?)<\/section>/)?.[1];
+  assert(guide,`Missing localized book guide: ${lang}`);
+  for(const value of [detailsTitle,englishLabel,freeQuestion,book.isbn,String(book.numberOfPages)]) assert(guide.includes(value),`Missing localized book evidence in ${lang}: ${value}`);
+  assert.equal((guide.match(/<h3\b/g)||[]).length,4,`Four reader answers required in ${lang}`);
+  assert(guide.includes('loading="lazy"') && guide.includes('width="1080" height="1620"'),`Actual responsive full-page preview required in ${lang}`);
+  for(const route of ['read','film','characters']) assert(guide.includes(`href="/${lang}/${route}/"`),`Missing localized route ${lang}/${route}`);
+}
+console.log('Verified French, Turkish and Arabic paperback details, language disclosure, four reader answers and real interior previews.');
