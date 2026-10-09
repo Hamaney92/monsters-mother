@@ -34,6 +34,7 @@ jobs:
       - run: node scripts/verify-locales.mjs
       - run: node scripts/verify-performance.mjs
       - run: node scripts/verify-book-seo.mjs
+      - run: node scripts/verify-journal-guide.mjs
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
