@@ -34,4 +34,25 @@ assert.equal(introductionArticle?.datePublished,'2026-09-27T12:00:00.000Z');
 assert.equal(introductionArticle?.dateModified,'2026-10-09T00:00:00.000Z');
 assert(introduction.includes('Updated <time'),'Introduction must disclose its update');
 assert(introductionBody[1].includes('free in English'),'Introduction must state the chapter language');
-console.log('Verified genre guide and book introduction, original dates, visible updates, sources and contextual reading links.');
+const sympathy=fs.readFileSync('dist/blog/why-we-root-for-monsters/index.html','utf8');
+const sympathyBody=sympathy.match(/<div class="prose"[^>]*>([\s\S]*?)<\/div><\/article>/);
+assert(sympathyBody,'Find the sympathy article before the shared book promotion');
+assert(sympathyBody[1].includes('Book club questions for Chapter One'),'Offer a chapter-specific discussion section');
+const discussion=sympathyBody[1].match(/<ol>([\s\S]*?)<\/ol>/);
+assert(discussion,'Discussion questions must be an ordered list');
+assert.equal((discussion[1].match(/<li>/g)||[]).length,5,'Keep five distinct chapter questions');
+for(const link of ['/read/','/story/','/characters/ember/','/blog/monstrous-motherhood/']) {
+  assert(sympathyBody[1].includes(`href="${link}"`),`Missing useful discussion link: ${link}`);
+}
+assert(sympathyBody[1].includes('opening scene only'),'Keep the discussion limited to the public chapter');
+assert(sympathyBody[1].includes('free and needs no account'),'Do not imply a signup is required');
+const chapter=fs.readFileSync('src/content/chapters/book-one-chapter-one.md','utf8');
+for(const evidence of ['Its claws caught in a seam.','She had hemmed it by the window.','Her hand moved before she decided to move it.','She waited until the next one came.']) {
+  assert(chapter.includes(evidence),`Discussion evidence missing from the real chapter: ${evidence}`);
+}
+const sympathyArticle=[...sympathy.matchAll(/<script type="application\/ld\+json">(.*?)<\/script>/gs)]
+  .map(match=>JSON.parse(match[1])).find(node=>node['@type']==='BlogPosting');
+assert.equal(sympathyArticle?.datePublished,'2026-09-25T00:00:00.000Z');
+assert.equal(sympathyArticle?.dateModified,'2026-10-09T00:00:00.000Z');
+assert(sympathy.includes('Updated <time'),'Sympathy article must disclose the update');
+console.log('Verified genre guide, introduction and chapter discussion, original dates, visible updates, sources and contextual reading links.');
