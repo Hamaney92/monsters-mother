@@ -63,4 +63,12 @@ for(const question of ['Is Ember Elara’s child or a dragon she finds?','What d
 assert(ember.includes('OPENING-CHAPTER SPOILERS ONLY'),'Make spoiler scope clear');
 for(const route of ['read/','characters/elara/','blog/monstrous-motherhood/','story/']) assert(ember.includes(`href="/${route}"`),`Missing Ember reading route: ${route}`);
 assert(ember.includes('free in English, without signing up'),'Do not imply a free complete book or translated chapter');
-console.log('Verified book metadata, real responsive paperback preview, grounded Ember guide, reader answers and chapter navigation in four languages.');
+const elara=fs.readFileSync('dist/characters/elara/index.html','utf8');
+assert(elara.includes('<title>Elara, Mother of a Dragon Child | A Monster’s Mother</title>'),'Elara title must identify her actual role');
+const elaraEvidence=chapterSource.split(/\r?\n\s*\r?\n/).find(p=>p.startsWith('She could not stop watching his chest'));
+assert(elaraEvidence && elara.includes(elaraEvidence),'Elara guide must cite the actual chapter');
+for(const question of ['What makes Elara’s situation so difficult?','How can she be afraid and still care?','Why do the cloth and shawl matter?','Where should I start reading Elara’s story?']) assert(elara.includes(question),`Missing Elara reader answer: ${question}`);
+assert(elara.includes('OPENING-CHAPTER SPOILERS ONLY'),'Make Elara spoiler scope clear');
+for(const route of ['read/','characters/ember/','blog/monstrous-motherhood/','story/']) assert(elara.includes(`href="/${route}"`),`Missing Elara reading route: ${route}`);
+assert(elara.includes('free in English, without signing up'),'Describe the actual free reading offer');
+console.log('Verified book metadata, real responsive paperback preview, grounded Elara and Ember guides, reader answers and chapter navigation in four languages.');

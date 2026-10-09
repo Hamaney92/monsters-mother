@@ -1,0 +1,36 @@
+---
+import { getEntry } from 'astro:content';
+import { path } from '../site';
+const chapter = await getEntry('chapters', 'book-one-chapter-one');
+const detail = chapter?.body?.split(/\r?\n\s*\r?\n/)
+  .find(paragraph => paragraph.startsWith('She could not stop watching his chest'));
+if (!detail) throw new Error('Missing chapter evidence for Elara’s reading guide');
+---
+<section aria-labelledby="elara-guide" class="elara-guide">
+  <p class="eyebrow">A READER’S GUIDE · OPENING-CHAPTER SPOILERS ONLY</p>
+  <h2 id="elara-guide">A mother caught between fear and attachment</h2>
+  <p>Elara is the mother at the centre of <i>A Monster’s Mother: A Cradle Made of Embers</i>. The opening follows her immediately after childbirth, alone in a cave during a snowstorm. Discovering wings where she expected an ordinary baby leaves her frightened, but the child’s breathing already matters to her.</p>
+  <blockquote cite={path('read/')}><p>{detail}</p></blockquote>
+  <p class="chapter-source">From “The First Breath”, Chapter One by YH. <a href={path('read/')}>Read the scene in context →</a></p>
+
+  <h3>What makes Elara’s situation so difficult?</h3>
+  <p>Her fear is not her only obstacle. Pain prevents her from sitting up; the cold and exhaustion make familiar movements difficult. There is nobody in the cave to explain what has happened or help her. The scene places a vulnerable mother beside a vulnerable child, rather than giving her an effortless answer.</p>
+
+  <h3>How can she be afraid and still care?</h3>
+  <p>She pulls her hand away from the unfamiliar face, yet waits for his next breath. When he struggles with a wing, her hand moves before she decides what to do, then stops above him. Those small, unfinished gestures suggest attachment without pretending that her fear has disappeared.</p>
+
+  <h3>Why do the cloth and shawl matter?</h3>
+  <p>The linen is something Elara prepared herself: she remembers hemming it by the window and leaving a crooked corner. Her shawl gives her hands a familiar task when everything else feels strange. These ordinary objects connect the child she expected to the creature before her, making the conflict personal rather than merely spectacular.</p>
+
+  <h3>Where should I start reading Elara’s story?</h3>
+  <p>Start with “The First Breath”. The complete first chapter is free in English, without signing up. This guide stops at the opening scene: how Elara’s choices develop, and what follows outside the cave, belongs to the rest of the novel.</p>
+  <nav aria-label="Continue exploring Elara’s story"><a href={path('read/')}>Read Chapter One</a> · <a href={path('characters/ember/')}>Meet her child, Ember</a> · <a href={path('blog/monstrous-motherhood/')}>Motherhood and monsters</a> · <a href={path('story/')}>About the illustrated novel</a></nav>
+</section>
+<style>
+  .elara-guide{margin-top:3rem;padding-top:2rem;border-top:1px solid var(--line)}
+  .elara-guide h3{font-size:1.8rem;line-height:1.2;margin-top:2rem}
+  .elara-guide blockquote{margin:1.5rem 0;padding-inline-start:1.25rem;border-inline-start:2px solid var(--copper)}
+  .chapter-source{font-size:.9rem}
+  .elara-guide a{text-decoration:underline;text-underline-offset:.2em}
+  .elara-guide nav{line-height:2;margin-top:2rem}
+</style>

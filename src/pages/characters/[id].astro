@@ -5,7 +5,8 @@ import Amazon from '../../components/Amazon.astro';
 import { archive } from '../../data/archive';
 import { path } from '../../site';
 import EmberReadingGuide from '../../components/EmberReadingGuide.astro';
+import ElaraReadingGuide from '../../components/ElaraReadingGuide.astro';
 export function getStaticPaths(){return archive.map(character=>({params:{id:character.id},props:{character}}));}
 const {character}=Astro.props;
 ---
-<Layout title={character.id==='ember'?'Ember, Elara’s Dragon Child':character.title} description={character.description}><section class="page-heading"><a class="eyebrow" href={path('characters/')}>← THE CHARACTERS / BOOK I</a><h1>{character.title}</h1><p>{character.label}</p></section><article class="prose"><div class:list={['character-portrait',character.id]}><ArtImage src={path(character.id+'-scene.webp')} alt={'Portrait of '+character.title} width="1024" height="1536" loading="lazy"/></div>{character.paragraphs.map(p=><p>{p}</p>)}{character.id==='ember' && <EmberReadingGuide/>}<div class="actions"><Amazon/><a class="text-link" href={path('read/')}>Read Chapter One free →</a></div></article></Layout>
+<Layout title={character.id==='ember'?'Ember, Elara’s Dragon Child':character.id==='elara'?'Elara, Mother of a Dragon Child':character.title} description={character.description}><section class="page-heading"><a class="eyebrow" href={path('characters/')}>← THE CHARACTERS / BOOK I</a><h1>{character.title}</h1><p>{character.label}</p></section><article class="prose"><div class:list={['character-portrait',character.id]}><ArtImage src={path(character.id+'-scene.webp')} alt={'Portrait of '+character.title} width="1024" height="1536" loading="lazy"/></div>{character.paragraphs.map(p=><p>{p}</p>)}{character.id==='ember' && <EmberReadingGuide/>}{character.id==='elara' && <ElaraReadingGuide/>}<div class="actions"><Amazon/><a class="text-link" href={path('read/')}>Read Chapter One free →</a></div></article></Layout>
