@@ -1,0 +1,9 @@
+---
+import images from '../data/images.json';
+import { path } from '../site';
+interface Props { enabled: boolean; }
+const { enabled } = Astro.props;
+const hero = images['cover-art.webp'];
+const srcset = hero.variants.map(variant => `${path(variant.avif)} ${variant.width}w`).join(', ');
+---
+{enabled && <link rel="preload" as="image" type="image/avif" imagesrcset={srcset} imagesizes="(max-width: 960px) 100vw, 59vw" fetchpriority="high" />}

@@ -25,6 +25,17 @@ for(const file of htmlFiles) {
     assert(fs.existsSync(path.join('dist',decodeURI(src).replace(/^\//,''))),`${file}: broken srcset ${src}`);
   }
   if(/<img[^>]*class="hero-art"/.test(html)) assert(/<img[^>]*class="hero-art"[^>]*fetchpriority="high"/.test(html),`${file}: hero must load early`);
+  const heroPreloads = [...html.matchAll(/<link[^>]*rel="preload"[^>]*as="image"[^>]*>/g)];
+  if (/<img[^>]*class="hero-art"/.test(html)) {
+    assert.equal(heroPreloads.length, 1, `${file}: preload the hero once`);
+    const preload = heroPreloads[0][0];
+    const source = html.match(/<source[^>]*type="image\/avif"[^>]*srcset="([^"]*cover-art[^"]*)"[^>]*sizes="([^"]+)"/);
+    assert(source, `${file}: responsive hero source missing`);
+    assert(preload.includes(`imagesrcset="${source[1]}"`), `${file}: preload must select the same hero variant`);
+    assert(preload.includes(`imagesizes="${source[2]}"`), `${file}: preload sizes must match the hero`);
+    assert(preload.includes('fetchpriority="high"'), `${file}: hero preload needs high priority`);
+    assert(html.indexOf('name="viewport"') < html.indexOf(preload), `${file}: establish viewport before responsive preload`);
+  } else assert.equal(heroPreloads.length, 0, `${file}: do not fetch an unused homepage image`);
 }
 const sitemap=fs.readFileSync('dist/sitemap-0.xml','utf8');
 const urls=[...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m=>m[1]);
