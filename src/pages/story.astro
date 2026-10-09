@@ -10,7 +10,7 @@ const bookUrl=new URL(path('story/'),Astro.site).href;
 const bookSchema={
   '@context':'https://schema.org',
   '@graph':[
-    {'@type':'Book','@id':`${bookUrl}#book`,name:`${book.data.title}: ${book.data.subtitle}`,author:{'@type':'Person',name:book.data.author},description:book.data.description,url:bookUrl,sameAs:book.data.amazon,inLanguage:'en',genre:'Dark fantasy',image:new URL(path('cover-art.webp'),Astro.site).href},
+    {'@type':'Book','@id':`${bookUrl}#book`,name:`${book.data.title}: ${book.data.subtitle}`,author:{'@type':'Person',name:book.data.author},description:book.data.description,url:bookUrl,sameAs:book.data.amazon,inLanguage:'en',genre:'Dark fantasy',image:new URL(path('cover-art.webp'),Astro.site).href,...(book.data.paperback ? {isbn:book.data.paperback.isbn,numberOfPages:book.data.paperback.pages,bookFormat:'https://schema.org/Paperback'} : {})},
     {'@type':'BreadcrumbList',itemListElement:[{'@type':'ListItem',position:1,name:'Home',item:new URL(path(),Astro.site).href},{'@type':'ListItem',position:2,name:'The book',item:bookUrl}]}
   ]
 };
@@ -23,6 +23,17 @@ const bookSchema={
   </section>
   <section class="prose story-prose">
     <Content/>
+    {book.data.paperback && <section class="edition-details" aria-labelledby="paperback-details">
+      <h2 id="paperback-details">Paperback edition details</h2>
+      <dl>
+        <div><dt>Author</dt><dd>{book.data.author}</dd></div>
+        <div><dt>Language</dt><dd>English</dd></div>
+        <div><dt>Format</dt><dd>Paperback · black-and-white interior illustrations</dd></div>
+        <div><dt>Print length</dt><dd>{book.data.paperback.pages} pages</dd></div>
+        <div><dt>ISBN-13</dt><dd>{book.data.paperback.isbn}</dd></div>
+      </dl>
+      <p>These details identify the English paperback. Check the <a href={book.data.amazon} target="_blank" rel="noopener noreferrer">Amazon listing</a> for the current price and delivery to your country.</p>
+    </section>}
     <div class="actions"><Amazon/><a class="text-link" href={path('read/')}>Read Chapter One free →</a></div>
     <section aria-labelledby="before-reading">
       <h2 id="before-reading">Before you begin reading</h2>
@@ -51,6 +62,12 @@ const bookSchema={
 </Layout>
 
 <style>
+  .edition-details{border-block:1px solid var(--line);padding-block:1.5rem;margin-block:2rem}
+  .edition-details dl{margin:1rem 0}
+  .edition-details dl div{display:grid;grid-template-columns:minmax(6rem,1fr) 2fr;gap:1rem;padding-block:.35rem}
+  .edition-details dt{font-weight:600}
+  .edition-details dd{margin:0;overflow-wrap:anywhere}
+  @media(max-width:400px){.edition-details dl div{grid-template-columns:1fr;gap:.1rem}}
   .paperback-preview{max-width:420px;margin:2rem auto}
   .paperback-preview :global(img){display:block;width:100%;height:auto;background:#fff}
   .paperback-preview figcaption{font-size:.9rem;line-height:1.6;color:var(--muted);margin-top:1rem}

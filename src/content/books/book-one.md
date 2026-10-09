@@ -6,6 +6,9 @@ order: 1
 amazon: "https://www.amazon.com/dp/B0HKYDF7BY"
 description: "Elara’s child has scales and wings. When her village demands she surrender him, keeping his trust may cost her everything. An illustrated dark fantasy by YH."
 published: true
+paperback:
+  isbn: "9798176764673"
+  pages: 138
 ---
 
 ## They called him a monster. She called him her son.
