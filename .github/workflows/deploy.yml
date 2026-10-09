@@ -33,6 +33,7 @@ jobs:
       - run: npm run verify
       - run: node scripts/verify-locales.mjs
       - run: node scripts/verify-performance.mjs
+      - run: node scripts/verify-book-seo.mjs
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
