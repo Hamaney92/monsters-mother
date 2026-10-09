@@ -7,6 +7,7 @@ for(const [name,image] of Object.entries(images)) {
   for(const v of image.variants) for(const format of ['avif','webp']) {
     const file=path.join('dist',v[format]);
     assert(fs.existsSync(file),`Missing delivery variant: ${file}`);
+    assert.equal(fs.statSync(file).size,v[`${format}Bytes`],`Delivery byte count mismatch: ${file}`);
     const meta=await sharp(file).metadata();
     assert.equal(meta.width,v.width,`Incorrect srcset width: ${file}`);
     assert(Math.abs(meta.width/meta.height-image.width/image.height)<0.005,`Aspect ratio changed: ${file}`);
@@ -14,7 +15,9 @@ for(const [name,image] of Object.entries(images)) {
   }
 }
 assert(images['brand-dragon.png'].variants.every(v=>v.avifBytes<25000 && v.webpBytes<35000),'Logo budget exceeded');
-assert(images['cover-art.webp'].variants[1].avifBytes<140000,'Hero mobile budget exceeded');
+const mobileHero=images['cover-art.webp'].variants.find(v=>v.width===768);
+assert(mobileHero && mobileHero.avifBytes<70000,'Hero mobile budget exceeded');
+assert(images['cover-art.webp'].variants.find(v=>v.width===480)?.avifBytes<35000,'Small hero budget exceeded');
 const htmlFiles=fs.readdirSync('dist',{recursive:true}).filter(f=>f.endsWith('.html'));
 for(const file of htmlFiles) {
   const html=fs.readFileSync(path.join('dist',file),'utf8');

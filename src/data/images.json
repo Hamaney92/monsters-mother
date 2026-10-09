@@ -55,15 +55,17 @@
     "variants": [
       {
         "width": 480,
-        "avif": "optimized/cover-art-480-b8a3c83bc2.avif",
-        "avifBytes": 43266,
+        "avif": "optimized/cover-art-480-4af52b1485.avif",
+        "avifBytes": 31681,
+        "avifQuality": 50,
         "webp": "optimized/cover-art-480-cf65ae4f65.webp",
         "webpBytes": 59094
       },
       {
         "width": 768,
-        "avif": "optimized/cover-art-768-071f657119.avif",
-        "avifBytes": 86930,
+        "avif": "optimized/cover-art-768-3edb8787f1.avif",
+        "avifBytes": 64446,
+        "avifQuality": 50,
         "webp": "optimized/cover-art-768-3651333ab4.webp",
         "webpBytes": 114880
       },
@@ -71,6 +73,7 @@
         "width": 1024,
         "avif": "optimized/cover-art-1024-532c4527fb.avif",
         "avifBytes": 144592,
+        "avifQuality": 58,
         "webp": "optimized/cover-art-1024-020fd74a5d.webp",
         "webpBytes": 201638
       }
