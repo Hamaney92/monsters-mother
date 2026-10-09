@@ -3,8 +3,12 @@ import Layout from '../layouts/Layout.astro';
 import VideoPlayer from '../components/VideoPlayer.astro';
 import Amazon from '../components/Amazon.astro';
 import { path } from '../site';
+import { getEntry } from 'astro:content';
+const chapter = await getEntry('chapters', 'book-one-chapter-one');
+if (!chapter?.body) throw new Error('Missing opening chapter for the film-to-book preview');
+const opening = chapter.body.trim().split(/\r?\n\s*\r?\n/).slice(0, 3);
 ---
-<Layout alternates={[{lang:'en',route:'movie/'},{lang:'fr',route:'fr/film/'},{lang:'ar',route:'ar/film/'},{lang:'x-default',route:'movie/'}]} title="The Mothers Monster (2026): Watch the Film" description="Watch The Mothers Monster (2026), also titled She Gave Birth to a Dragon. Discover the fantasy film, its premise, and a dark fantasy novel by YH.">
+<Layout alternates={[{lang:'en',route:'movie/'},{lang:'fr',route:'fr/film/'},{lang:'ar',route:'ar/film/'},{lang:'tr',route:'tr/film/'},{lang:'x-default',route:'movie/'}]} title="The Mothers Monster (2026): Watch the Film" description="Watch The Mothers Monster (2026), also titled She Gave Birth to a Dragon. Discover the fantasy film, its premise, and a dark fantasy novel by YH.">
 <section class="section watch-page">
 <p class="eyebrow">THE FANTASY FILM · 2026</p>
 <h1>The Mothers<br/><em>Monster</em></h1>
@@ -22,6 +26,17 @@ import { path } from '../site';
 </div>
 <!-- Future website advertising belongs below the player, never over its controls. No ad scripts are enabled. -->
 </section>
-<section class="book-band"><p class="eyebrow">DISCOVER THE BOOK · YH</p><h2>Meet Elara and Ember.</h2><p>A mother. A dragon child. A world that sees a monster.</p><div class="actions"><a class="button secondary" href={path('read/')}>Read Chapter One free →</a><Amazon/></div></section>
+<section class="book-band" aria-labelledby="book-opening">
+<p class="eyebrow">FROM WATCHING TO READING · YH</p>
+<h2 id="book-opening">Begin with “The First Breath”.</h2>
+<p>The film is <i>The Mothers Monster</i>. The novel is <i>A Monster’s Mother: A Cradle Made of Embers</i>, by YH. If the bond between a mother and her dragon child brought you here, start with the opening of Elara and Ember’s story.</p>
+<blockquote class="opening-preview" cite={path('read/')}>
+  {opening.map(paragraph => <p>{paragraph}</p>)}
+</blockquote>
+<p class="preview-credit">From “The First Breath” · Book I, Chapter One · YH</p>
+<p>Chapter One is free to read on this site, in English, with no sign-up. It is an excerpt, not the complete novel. The paperback includes black-and-white illustrations.</p>
+<div class="actions"><a class="button secondary" href={path('read/')}>Continue Chapter One free (English) →</a><Amazon/></div>
+<p class="reader-next"><a href={path('story/')}>About the book</a> · <a href={path('characters/ember/')}>Meet Ember</a> · <a href={path('blog/monstrous-motherhood/')}>Why a mother protects a “monster”</a></p>
+</section>
 </Layout>
-<style>.watch-page{max-width:1100px;margin:auto;padding-top:8rem}.watch-page h1{font-size:clamp(3rem,7vw,6rem);line-height:1.05}.watch-page .lead{max-width:760px;margin:2rem 0}.actions{justify-content:center;flex-wrap:wrap}.film-notes{max-width:760px;margin:3rem auto 0}.film-notes h2{font-size:2rem;margin-top:2.5rem}.film-notes p{line-height:1.8}</style>
+<style>.watch-page{max-width:1100px;margin:auto;padding-top:8rem}.watch-page h1{font-size:clamp(3rem,7vw,6rem);line-height:1.05}.watch-page .lead{max-width:760px;margin:2rem 0}.actions{justify-content:center;flex-wrap:wrap}.film-notes{max-width:760px;margin:3rem auto 0}.film-notes h2{font-size:2rem;margin-top:2.5rem}.film-notes p{line-height:1.8}.book-band>p{max-width:760px;margin-inline:auto}.opening-preview{max-width:760px;margin:2rem auto 1rem;padding:1.5rem;text-align:left;border-inline-start:2px solid var(--copper,#c08050);background:#191714}.opening-preview p{font-family:Georgia,serif;line-height:1.8}.preview-credit{font-size:.9rem;color:#c7bcae}.reader-next{line-height:2}.reader-next a{text-decoration:underline;text-underline-offset:.2em}@media(max-width:600px){.opening-preview{padding:1rem}.actions .button{white-space:normal}}</style>

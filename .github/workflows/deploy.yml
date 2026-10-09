@@ -36,6 +36,7 @@ jobs:
       - run: node scripts/verify-book-seo.mjs
       - run: node scripts/verify-journal-guide.mjs
       - run: node scripts/verify-favicon.mjs
+      - run: node scripts/verify-film-reader-path.mjs
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
