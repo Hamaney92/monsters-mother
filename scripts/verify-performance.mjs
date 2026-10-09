@@ -35,6 +35,9 @@ for(const file of htmlFiles) {
     assert(preload.includes(`imagesizes="${source[2]}"`), `${file}: preload sizes must match the hero`);
     assert(preload.includes('fetchpriority="high"'), `${file}: hero preload needs high priority`);
     assert(html.indexOf('name="viewport"') < html.indexOf(preload), `${file}: establish viewport before responsive preload`);
+    const fontPreloads = [...html.matchAll(/<link[^>]*rel="preload"[^>]*as="font"[^>]*>/g)].map(match => match[0]);
+    assert.equal(fontPreloads.length, html.includes('<html lang="ar"') ? 2 : 3, `${file}: preload only relevant fonts`);
+    assert(fontPreloads.every(font => font.includes('fetchpriority="low"')), `${file}: fonts must not compete with the homepage image`);
   } else assert.equal(heroPreloads.length, 0, `${file}: do not fetch an unused homepage image`);
 }
 const sitemap=fs.readFileSync('dist/sitemap-0.xml','utf8');

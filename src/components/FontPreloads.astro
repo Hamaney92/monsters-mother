@@ -1,0 +1,13 @@
+---
+import bodyFont from '@fontsource-variable/manrope/files/manrope-latin-wght-normal.woff2?url';
+import titleFont from '@fontsource-variable/cormorant-garamond/files/cormorant-garamond-latin-wght-normal.woff2?url';
+import italicFont from '@fontsource-variable/cormorant-garamond/files/cormorant-garamond-latin-wght-italic.woff2?url';
+interface Props { lang: string; homepage: boolean; }
+const { lang, homepage } = Astro.props;
+// The homepage LCP is the cover image. Keep font discovery early without
+// competing at the same priority. CSS font-display:swap preserves readable text.
+const priority = homepage ? 'low' : 'auto';
+---
+{!(homepage && lang === 'ar') && <link rel="preload" href={bodyFont} as="font" type="font/woff2" crossorigin="anonymous" fetchpriority={priority} />}
+<link rel="preload" href={titleFont} as="font" type="font/woff2" crossorigin="anonymous" fetchpriority={priority} />
+<link rel="preload" href={italicFont} as="font" type="font/woff2" crossorigin="anonymous" fetchpriority={priority} />
