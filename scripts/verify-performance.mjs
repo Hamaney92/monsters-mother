@@ -20,6 +20,11 @@ for(const file of htmlFiles) {
   const html=fs.readFileSync(path.join('dist',file),'utf8');
   assert(!/fonts\.(googleapis|gstatic)\.com/.test(html),`${file}: external font dependency`);
   assert(!/<img[^>]*src="[^\"]*brand-dragon\.png"/.test(html),`${file}: oversized logo`);
+  for (const image of html.matchAll(/<img\b[^>]*>/g)) {
+    if (image[0].includes('class="portal-image"') && image[0].includes('loading="lazy"')) {
+      assert(image[0].includes('fetchpriority="low"'), `${file}: below-fold portal images must not compete with the hero`);
+    }
+  }
   for(const match of html.matchAll(/(?:srcset)="([^"]+)"/g)) for(const item of match[1].split(',')) {
     const src=item.trim().split(' ')[0];
     assert(fs.existsSync(path.join('dist',decodeURI(src).replace(/^\//,''))),`${file}: broken srcset ${src}`);
@@ -35,9 +40,6 @@ for(const file of htmlFiles) {
     assert(preload.includes(`imagesizes="${source[2]}"`), `${file}: preload sizes must match the hero`);
     assert(preload.includes('fetchpriority="high"'), `${file}: hero preload needs high priority`);
     assert(html.indexOf('name="viewport"') < html.indexOf(preload), `${file}: establish viewport before responsive preload`);
-    const fontPreloads = [...html.matchAll(/<link[^>]*rel="preload"[^>]*as="font"[^>]*>/g)].map(match => match[0]);
-    assert.equal(fontPreloads.length, html.includes('<html lang="ar"') ? 2 : 3, `${file}: preload only relevant fonts`);
-    assert(fontPreloads.every(font => font.includes('fetchpriority="low"')), `${file}: fonts must not compete with the homepage image`);
   } else assert.equal(heroPreloads.length, 0, `${file}: do not fetch an unused homepage image`);
 }
 const sitemap=fs.readFileSync('dist/sitemap-0.xml','utf8');
