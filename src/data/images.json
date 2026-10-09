@@ -188,6 +188,34 @@
       }
     ]
   },
+  "interior-page-8.webp": {
+    "width": 1080,
+    "height": 1620,
+    "originalBytes": 308200,
+    "variants": [
+      {
+        "width": 480,
+        "avif": "optimized/interior-page-8-480-9bfb10dba1.avif",
+        "avifBytes": 35513,
+        "webp": "optimized/interior-page-8-480-0a432f1cbc.webp",
+        "webpBytes": 52688
+      },
+      {
+        "width": 768,
+        "avif": "optimized/interior-page-8-768-7068107a53.avif",
+        "avifBytes": 72313,
+        "webp": "optimized/interior-page-8-768-49948549b9.webp",
+        "webpBytes": 110530
+      },
+      {
+        "width": 1080,
+        "avif": "optimized/interior-page-8-1080-ecca520892.avif",
+        "avifBytes": 137824,
+        "webp": "optimized/interior-page-8-1080-16985666b8.webp",
+        "webpBytes": 205086
+      }
+    ]
+  },
   "journal-birth.webp": {
     "width": 1200,
     "height": 800,

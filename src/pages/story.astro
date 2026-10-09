@@ -2,6 +2,7 @@
 import { getCollection, render } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 import Amazon from '../components/Amazon.astro';
+import ArtImage from '../components/ArtImage.astro';
 import { path } from '../site';
 const books=(await getCollection('books',({data})=>data.published)).sort((a,b)=>a.data.order-b.data.order);
 const book=books[0];const {Content}=await render(book);
@@ -34,6 +35,11 @@ const bookSchema={
       <p>The novel and the free chapter are in English. The French, Arabic and Turkish versions of this website introduce the story and its world; they are not translated editions of the novel.</p>
       <h3>Does the book include illustrations?</h3>
       <p>Yes. It is an illustrated dark fantasy novel. Its black-and-white interior drawings accompany the story; the colour artwork on this website introduces the characters and atmosphere. You can meet <a href={path('characters/elara/')}>Elara</a> and <a href={path('characters/ember/')}>Ember</a> before reading.</p>
+      <figure class="paperback-preview" id="paperback-preview">
+        <ArtImage src={path('interior-page-8.webp')} alt="Black-and-white interior page showing Elara holding the newborn dragon beside a snowy cave, with printed page number 8." loading="lazy" sizes="(max-width: 600px) 90vw, 420px"/>
+        <figcaption>Inside the illustrated paperback: page 8, from Chapter Two, “Back Through the Snow”.</figcaption>
+      </figure>
+      <p>This is a digital preview of a page from the English 6 × 9-inch paperback, including its margins and page number. It shows the interior drawing style, not the colour artwork used to present the book on this site. Contrast on printed paper can differ from a screen.</p>
       <h3>Is The Mothers Monster the same title?</h3>
       <p><i>The Mothers Monster</i>, also presented as <i>She Gave Birth to a Dragon</i>, is the video title. <i>A Monster’s Mother: A Cradle Made of Embers</i> is the novel by YH featured here. Visit the <a href={path('movie/')}>film page</a> for the video and its source, or begin with the book’s free chapter.</p>
       <h3>Who might enjoy this dragon fantasy?</h3>
@@ -43,3 +49,9 @@ const bookSchema={
   </section>
   {books.length>1 && <section class="section"><h2>Continue the series</h2>{books.slice(1).map(b=><article><h3>{b.data.title}: {b.data.subtitle}</h3><p>{b.data.description}</p>{b.data.amazon && <a href={b.data.amazon}>Find the book on Amazon</a>}</article>)}</section>}
 </Layout>
+
+<style>
+  .paperback-preview{max-width:420px;margin:2rem auto}
+  .paperback-preview :global(img){display:block;width:100%;height:auto;background:#fff}
+  .paperback-preview figcaption{font-size:.9rem;line-height:1.6;color:var(--muted);margin-top:1rem}
+</style>

@@ -1,0 +1,17 @@
+{
+  "asset": "interior-page-8.webp",
+  "title": "A Monster's Mother: A Cradle Made of Embers",
+  "author": "YH",
+  "isbn": "9798176764673",
+  "sourcePdf": "A-Monsters-Mother-Book-1-interior-ISBN-v10.pdf",
+  "sourcePdfSha256": "9b54a543e53ba5d8169084ea6512becc62e622de883b771690b85f809bee14e3",
+  "pdfPage": 12,
+  "printedPage": 8,
+  "chapter": "Back Through the Snow",
+  "renderDpi": 180,
+  "width": 1080,
+  "height": 1620,
+  "process": "Whole PDF page rendered with Poppler and exported as WebP; no crop, retouch or AI regeneration.",
+  "publicationEvidence": "Existing publication-v11 submission record identifies this exact PDF hash as the submitted interior.",
+  "qualification": "Digital preview, not a photograph or certification of a physical printed copy."
+}
