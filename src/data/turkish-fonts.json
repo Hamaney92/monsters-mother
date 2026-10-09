@@ -1,0 +1,56 @@
+{
+  "codepoints": [
+    286,
+    287,
+    304,
+    350,
+    351
+  ],
+  "fonts": [
+    {
+      "file": "fonts/manrope-turkish-overlay-normal.woff2",
+      "source": "node_modules/@fontsource-variable/manrope/files/manrope-latin-ext-wght-normal.woff2",
+      "sourceSha256": "3911b66d9f2e005a4b989223405d0e5032619c668597ba467cc76a23c8fffcfb",
+      "sha256": "84ac434e7918aeca16eae40418bd27bf08b668daead8bf8e5a1c984956b425d6",
+      "bytes": 2396,
+      "originalBytes": 15120,
+      "style": "normal",
+      "weightRange": [
+        200,
+        800
+      ],
+      "license": "fonts/manrope-OFL.txt",
+      "glyphMetricsAndOutlinesVerified": true
+    },
+    {
+      "file": "fonts/cormorant-garamond-turkish-overlay-normal.woff2",
+      "source": "node_modules/@fontsource-variable/cormorant-garamond/files/cormorant-garamond-latin-ext-wght-normal.woff2",
+      "sourceSha256": "cfa9a397d86f66c5c51775a2500a712d5f632a04f0c5eca6930dfaf612d4566d",
+      "sha256": "bd9c9cd8b94ec0697abd3ceb7e67ba20a03839060c24256318c0e04bb41d20c1",
+      "bytes": 2676,
+      "originalBytes": 33736,
+      "style": "normal",
+      "weightRange": [
+        300,
+        700
+      ],
+      "license": "fonts/cormorant-garamond-OFL.txt",
+      "glyphMetricsAndOutlinesVerified": true
+    },
+    {
+      "file": "fonts/cormorant-garamond-turkish-overlay-italic.woff2",
+      "source": "node_modules/@fontsource-variable/cormorant-garamond/files/cormorant-garamond-latin-ext-wght-italic.woff2",
+      "sourceSha256": "cd5bf126b2c84ab41b254a6a9a1ffb5c326a0f9f82c22fb4704daa31c9aaa415",
+      "sha256": "b1fc206833580d8c04af133ed812b0b3d9f746202002a9c92820b123c458b730",
+      "bytes": 2572,
+      "originalBytes": 34392,
+      "style": "italic",
+      "weightRange": [
+        300,
+        700
+      ],
+      "license": "fonts/cormorant-garamond-OFL.txt",
+      "glyphMetricsAndOutlinesVerified": true
+    }
+  ]
+}

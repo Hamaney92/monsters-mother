@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
 import sharp from 'sharp';
+import './verify-turkish-fonts.mjs';
 const images=JSON.parse(fs.readFileSync('src/data/images.json','utf8'));
 for(const [name,image] of Object.entries(images)) {
   for(const v of image.variants) for(const format of ['avif','webp']) {
