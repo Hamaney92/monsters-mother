@@ -69,3 +69,20 @@ assert(motherhood.includes('https://www.gutenberg.org/cache/epub/84/pg84-images.
 assert(motherhood.includes('not a diagnosis') && motherhood.includes('not a claim that YH’s novel adapts'),'Keep interpretive limits clear');
 for(const route of ['/read/','/characters/elara/','/characters/ember/','/story/','/blog/why-we-root-for-monsters/']) assert(motherhood.includes(`href="${route}"`),`Missing motherhood reader route: ${route}`);
 console.log('Verified chapter-grounded motherhood reading, sourced literary comparison, scope disclosures and original publication date.');
+const expectedReadingPaths={
+  'dark-fantasy-gothic-fantasy':['monstrous-motherhood','why-we-root-for-monsters'],
+  'she-gave-birth-to-a-dragon':['monstrous-motherhood','dark-fantasy-gothic-fantasy'],
+  'monstrous-motherhood':['why-we-root-for-monsters','she-gave-birth-to-a-dragon'],
+  'why-we-root-for-monsters':['monstrous-motherhood','she-gave-birth-to-a-dragon'],
+};
+for(const [id,expected] of Object.entries(expectedReadingPaths)) {
+  const page=fs.readFileSync(`dist/blog/${id}/index.html`,'utf8');
+  const section=page.match(/<section class="section related"[^>]*>([\s\S]*?)<\/section>/);
+  assert(section,`Missing related reading section: ${id}`);
+  const routes=[...section[1].matchAll(/href="\/blog\/([^"/]+)\/"/g)].map(m=>m[1]);
+  assert.deepEqual(routes,expected,`Use the editorial reading path for ${id}`);
+  assert.equal(new Set(routes).size,2,'Offer two distinct essays');
+  assert(!routes.includes(id),'Do not recommend the current article');
+  for(const target of routes) assert(fs.existsSync(`dist/blog/${target}/index.html`),'Recommend only a published page');
+}
+console.log('Verified four topic-specific reading paths with two distinct published essays each.');
