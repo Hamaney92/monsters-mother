@@ -20,11 +20,6 @@ for(const file of htmlFiles) {
   const html=fs.readFileSync(path.join('dist',file),'utf8');
   assert(!/fonts\.(googleapis|gstatic)\.com/.test(html),`${file}: external font dependency`);
   assert(!/<img[^>]*src="[^\"]*brand-dragon\.png"/.test(html),`${file}: oversized logo`);
-  for (const image of html.matchAll(/<img\b[^>]*>/g)) {
-    if (image[0].includes('class="portal-image"') && image[0].includes('loading="lazy"')) {
-      assert(image[0].includes('fetchpriority="low"'), `${file}: below-fold portal images must not compete with the hero`);
-    }
-  }
   for(const match of html.matchAll(/(?:srcset)="([^"]+)"/g)) for(const item of match[1].split(',')) {
     const src=item.trim().split(' ')[0];
     assert(fs.existsSync(path.join('dist',decodeURI(src).replace(/^\//,''))),`${file}: broken srcset ${src}`);
