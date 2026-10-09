@@ -27,4 +27,13 @@ for(const lang of ['en','fr','ar','tr']) {
     assert(match?.[1].includes(`href="/${prefix}read/"`),`Missing chapter link in ${lang} ${nav}`);
   }
 }
-console.log('Verified descriptive book metadata, accurate Book entity, reader answers and chapter navigation in four languages.');
+const ember=fs.readFileSync('dist/characters/ember/index.html','utf8');
+assert(ember.includes('<title>Ember, Elara’s Dragon Child | A Monster’s Mother</title>'),'Ember title must identify his role');
+const chapterSource=fs.readFileSync('src/content/chapters/book-one-chapter-one.md','utf8');
+const evidence=chapterSource.split(/\r?\n\s*\r?\n/).find(p=>p.startsWith('Nothing had prepared her for one'));
+assert(evidence && ember.includes(evidence),'Ember guide must cite the actual chapter');
+for(const question of ['Is Ember Elara’s child or a dragon she finds?','What does the baby dragon look like?','Does Elara accept him immediately?','Why begin with this scene?']) assert(ember.includes(question),`Missing Ember reader answer: ${question}`);
+assert(ember.includes('OPENING-CHAPTER SPOILERS ONLY'),'Make spoiler scope clear');
+for(const route of ['read/','characters/elara/','blog/monstrous-motherhood/','story/']) assert(ember.includes(`href="/${route}"`),`Missing Ember reading route: ${route}`);
+assert(ember.includes('free in English, without signing up'),'Do not imply a free complete book or translated chapter');
+console.log('Verified descriptive book metadata, accurate Book entity, grounded Ember guide, reader answers and chapter navigation in four languages.');

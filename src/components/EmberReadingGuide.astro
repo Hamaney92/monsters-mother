@@ -1,0 +1,36 @@
+---
+import { getEntry } from 'astro:content';
+import { path } from '../site';
+const chapter = await getEntry('chapters', 'book-one-chapter-one');
+const detail = chapter?.body?.split(/\r?\n\s*\r?\n/)
+  .find(paragraph => paragraph.startsWith('Nothing had prepared her for one'));
+if (!detail) throw new Error('Missing chapter evidence for Ember’s reading guide');
+---
+<section aria-labelledby="ember-guide" class="ember-guide">
+  <p class="eyebrow">A READER’S GUIDE · OPENING-CHAPTER SPOILERS ONLY</p>
+  <h2 id="ember-guide">A dragon child, not a dragonrider’s mount</h2>
+  <p>In the opening of <i>A Monster’s Mother: A Cradle Made of Embers</i>, Ember is a newborn who cannot even free his claws from Elara’s dress. The first question is not who will command his power. It is whether his mother can bring herself to touch him.</p>
+  <blockquote cite={path('read/')}><p>{detail}</p></blockquote>
+  <p class="chapter-source">From “The First Breath”, Chapter One by YH. <a href={path('read/')}>Read the scene in context →</a></p>
+
+  <h3>Is Ember Elara’s child or a dragon she finds?</h3>
+  <p>He is her child. Elara enters the cave carrying a baby and discovers scales and wings after giving birth. Her difficulty is recognising the helpless creature in front of her as the child she had imagined.</p>
+
+  <h3>What does the baby dragon look like?</h3>
+  <p>The first chapter describes a pale pink creature with a narrow head, tiny scales at his throat and thin, awkward wings. One wing drags along the stone; a claw catches in a seam. These are details of a vulnerable newborn, not an already invincible beast.</p>
+
+  <h3>Does Elara accept him immediately?</h3>
+  <p>No. She pulls away, recoils from his face and struggles to touch him. Yet she also watches his chest and waits for his next breath. Fear and concern exist together. That conflict is the starting point of their relationship, rather than a sign that she feels nothing for him.</p>
+
+  <h3>Why begin with this scene?</h3>
+  <p>For a reader interested in the bond between a mother and a dragon, the scene offers a concrete beginning: cloth, cold stone, a frightened woman and a child who needs her. You can read the full first chapter free in English, without signing up. The later events and Ember’s future are left for the book.</p>
+  <nav aria-label="Continue exploring Ember’s story"><a href={path('characters/elara/')}>Meet Elara</a> · <a href={path('blog/monstrous-motherhood/')}>Read about motherhood and monsters</a> · <a href={path('story/')}>About the illustrated novel</a></nav>
+</section>
+<style>
+  .ember-guide{margin-top:3rem;padding-top:2rem;border-top:1px solid var(--line)}
+  .ember-guide h3{font-size:1.8rem;line-height:1.2;margin-top:2rem}
+  .ember-guide blockquote{margin:1.5rem 0;padding-inline-start:1.25rem;border-inline-start:2px solid var(--copper)}
+  .chapter-source{font-size:.9rem}
+  .ember-guide a{text-decoration:underline;text-underline-offset:.2em}
+  .ember-guide nav{line-height:2;margin-top:2rem}
+</style>
