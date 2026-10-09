@@ -21,4 +21,5 @@ for(const font of manifest.fonts){
   assert(css.indexOf(`src:url('/${font.file}')`)>css.lastIndexOf('latin-ext-wght-italic.woff2'));
 }
 assert.equal((css.match(/latin-ext-wght-/g)||[]).length,3,'Retain complete Latin Extended fallback faces');
+assert.equal((css.match(/unicode-range:U\+0100-0130,U\+0132-02BA/g)||[]).length,3,'Do not request Latin Extended for dotless i: it exists in the Latin files');
 console.log('Verified Turkish glyph overlay hashes, byte budgets, OFL notices and full fallback faces.');
