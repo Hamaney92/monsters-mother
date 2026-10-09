@@ -1,0 +1,33 @@
+{
+  "ci": {
+    "collect": {
+      "staticDistDir": "dist",
+      "numberOfRuns": 3,
+      "url": [
+        "http://localhost/",
+        "http://localhost/fr/",
+        "http://localhost/ar/",
+        "http://localhost/tr/",
+        "http://localhost/story/",
+        "http://localhost/read/"
+      ],
+      "settings": {
+        "formFactor": "mobile",
+        "throttlingMethod": "simulate",
+        "onlyCategories": ["performance", "accessibility", "best-practices", "seo"]
+      }
+    },
+    "assert": {
+      "includePassedAssertions": true,
+      "assertions": {
+        "categories:performance": ["error", {"minScore": 0.9, "aggregationMethod": "median"}],
+        "categories:accessibility": ["error", {"minScore": 1, "aggregationMethod": "median"}],
+        "categories:best-practices": ["error", {"minScore": 1, "aggregationMethod": "median"}],
+        "categories:seo": ["error", {"minScore": 1, "aggregationMethod": "median"}],
+        "largest-contentful-paint": ["error", {"maxNumericValue": 2500, "aggregationMethod": "median"}],
+        "cumulative-layout-shift": ["error", {"maxNumericValue": 0.1, "aggregationMethod": "median"}],
+        "total-blocking-time": ["error", {"maxNumericValue": 200, "aggregationMethod": "median"}]
+      }
+    }
+  }
+}

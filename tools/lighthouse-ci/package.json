@@ -1,0 +1,8 @@
+{
+  "name": "monsters-mother-mobile-check",
+  "private": true,
+  "version": "1.0.0",
+  "devDependencies": {
+    "lighthouse": "13.5.0"
+  }
+}
