@@ -56,3 +56,16 @@ assert.equal(sympathyArticle?.datePublished,'2026-09-25T00:00:00.000Z');
 assert.equal(sympathyArticle?.dateModified,'2026-10-09T00:00:00.000Z');
 assert(sympathy.includes('Updated <time'),'Sympathy article must disclose the update');
 console.log('Verified genre guide, introduction and chapter discussion, original dates, visible updates, sources and contextual reading links.');
+const motherhood=fs.readFileSync('dist/blog/monstrous-motherhood/index.html','utf8');
+const motherhoodArticle=[...motherhood.matchAll(/<script type="application\/ld\+json">(.*?)<\/script>/gs)]
+  .map(match=>JSON.parse(match[1])).find(node=>node['@type']==='BlogPosting');
+assert.equal(motherhoodArticle?.datePublished,'2026-09-27T00:00:00.000Z');
+assert.equal(motherhoodArticle?.dateModified,'2026-10-09T00:00:00.000Z');
+assert(motherhood.includes('Updated <time'),'Show the substantive update date');
+const careQuote=chapter.split(/\r?\n\s*\r?\n/).find(p=>p.startsWith('She could not stop watching his chest'));
+assert(careQuote && motherhood.includes(careQuote),'Ground the motherhood reading in the actual chapter');
+for(const heading of ['What does monstrous motherhood mean in this reading?','Elara: care before certainty','A comparison with Frankenstein: what does a creator owe?','Reading fear without excusing harm']) assert(motherhood.includes(heading),`Missing motherhood reading section: ${heading}`);
+assert(motherhood.includes('https://www.gutenberg.org/cache/epub/84/pg84-images.html#chap10'),'Link the actual primary literary source');
+assert(motherhood.includes('not a diagnosis') && motherhood.includes('not a claim that YH’s novel adapts'),'Keep interpretive limits clear');
+for(const route of ['/read/','/characters/elara/','/characters/ember/','/story/','/blog/why-we-root-for-monsters/']) assert(motherhood.includes(`href="${route}"`),`Missing motherhood reader route: ${route}`);
+console.log('Verified chapter-grounded motherhood reading, sourced literary comparison, scope disclosures and original publication date.');
