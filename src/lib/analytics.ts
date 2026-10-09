@@ -31,6 +31,16 @@ export function amazonDestination(value: string): string | null {
   } catch { return null; }
 }
 
+// Only public chapter routes on this site's production origin. Never send a
+// free-text URL, query string, fragment, credentials or another site's path.
+export function chapterDestination(value: string, origin: string): string | null {
+  try {
+    const url = new URL(value);
+    if (url.protocol !== 'https:' || url.origin !== origin || url.username || url.password) return null;
+    return /^\/(?:fr\/|ar\/|tr\/)?read\/$/.test(url.pathname) ? origin + url.pathname : null;
+  } catch { return null; }
+}
+
 export function initAnalytics(root: HTMLElement, win: AnalyticsWindow = window, doc: Document = document) {
   const id = root.dataset.measurementId || '';
   const origin = root.dataset.origin || '';
@@ -127,8 +137,11 @@ export function initAnalytics(root: HTMLElement, win: AnalyticsWindow = window, 
     const target = event.target;
     if (!(target instanceof Element)) return;
     const anchor = target.closest<HTMLAnchorElement>('a[href]');
-    const destination = anchor && amazonDestination(anchor.href);
-    if (destination) win.gtag?.('event', 'amazon_click', {
+    if (!anchor) return;
+    const amazon = amazonDestination(anchor.href);
+    const chapter = chapterDestination(anchor.href, origin);
+    const destination = amazon || chapter;
+    if (destination) win.gtag?.('event', amazon ? 'amazon_click' : 'chapter_click', {
       send_to: id, link_url: destination, language: doc.documentElement.lang,
       page_location: origin + win.location.pathname,
     });

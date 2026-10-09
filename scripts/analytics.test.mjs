@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { CONSENT_KEY, CONSENT_SECONDS, parseConsent, cleanReferrer, amazonDestination, initAnalytics } from '../src/lib/analytics.ts';
+import { CONSENT_KEY, CONSENT_SECONDS, parseConsent, cleanReferrer, amazonDestination, chapterDestination, initAnalytics } from '../src/lib/analytics.ts';
 
 const stored = (value, offset = CONSENT_SECONDS * 1000) => JSON.stringify({ version: 1, value, expires: Date.now() + offset });
 function fixture({ saved = null, origin = 'https://mothersmonster.com', blocked = false } = {}) {
@@ -52,6 +52,15 @@ test('Amazon event only accepts canonical product links and strips tracking para
   assert.equal(amazonDestination('https://amazon.com.evil.test/dp/B0HKYDF7BY'), null);
   assert.equal(amazonDestination('https://www.amazon.com/s?k=private'), null);
   assert.equal(amazonDestination('mailto:person@example.com'), null);
+});
+test('chapter destinations accept only local chapter routes and strip query data', () => {
+  const origin='https://mothersmonster.com';
+  for(const prefix of ['', 'fr/', 'ar/', 'tr/']) {
+    assert.equal(chapterDestination(`${origin}/${prefix}read/?email=private#paragraph`,origin),`${origin}/${prefix}read/`);
+  }
+  for(const value of ['https://mothersmonster.com.evil.test/read/','https://elsewhere.test/read/','http://mothersmonster.com/read/','https://person:secret@mothersmonster.com/read/','https://mothersmonster.com/private/','https://mothersmonster.com/read/private/','mailto:private@example.org','not a URL']) {
+    assert.equal(chapterDestination(value,origin),null);
+  }
 });
 test('first visit makes zero GA requests and shows the optional banner', () => {
   const f = fixture();
@@ -156,5 +165,39 @@ test('Amazon clicks are measured only after consent, with no purchase event or q
   } finally {
     if (originalElement === undefined) delete globalThis.Element;
     else globalThis.Element = originalElement;
+  }
+});
+
+test('chapter clicks preserve the public source page and require current consent', () => {
+  const originalElement=globalThis.Element;
+  globalThis.Element=class {};
+  try {
+    const f=fixture();
+    f.win.location.pathname='/blog/dark-fantasy-gothic-fantasy/';
+    const target=new globalThis.Element();
+    let href='https://mothersmonster.com/read/?private=value#secret';
+    target.closest=()=>({href});
+    f.doc.emit('click',{target});
+    assert.equal(f.commands().length,0);
+    f.click('[data-privacy-accept]');
+    f.doc.emit('click',{target});
+    assert.deepEqual(f.commands().at(-1),['event','chapter_click',{
+      send_to:'G-EX3NWTTVFR',link_url:'https://mothersmonster.com/read/',language:'fr',page_location:'https://mothersmonster.com/blog/dark-fantasy-gothic-fantasy/',
+    }]);
+    const count=f.commands().length;
+    href='https://other.example/read/';
+    f.doc.emit('click',{target});
+    assert.equal(f.commands().length,count);
+    href='https://mothersmonster.com/story/';
+    f.doc.emit('click',{target});
+    assert.equal(f.commands().length,count);
+    href='https://mothersmonster.com/read/';
+    f.click('[data-privacy-reject]');
+    const afterWithdrawal=f.commands().length;
+    f.doc.emit('click',{target});
+    assert.equal(f.commands().length,afterWithdrawal);
+  } finally {
+    if(originalElement===undefined)delete globalThis.Element;
+    else globalThis.Element=originalElement;
   }
 });
