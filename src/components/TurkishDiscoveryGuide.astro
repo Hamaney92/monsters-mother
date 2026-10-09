@@ -1,0 +1,25 @@
+---
+import {path} from '../site';
+---
+<section class="section discovery-guide" aria-labelledby="film-or-book">
+  <h2 id="film-or-book">Filmi mi, romanı mı arıyorsunuz?</h2>
+  <div class="discovery-options">
+    <article>
+      <h3>The Mothers Monster filmi</h3>
+      <p>Bir kadının ejderha doğurduğu videoyu arıyorsanız, film rehberine gidin. YouTube’da <i>She Gave Birth to a Dragon | The Mothers Monster</i> adıyla yayımlanan videonun kaynağını, başlangıç konusunu ve dil seçenekleri hakkında bilgiyi orada bulabilirsiniz. Bu site Türkçe dublaj sağlamaz; mevcut altyazılar YouTube’a bağlıdır.</p>
+      <a class="text-link" href={path('tr/film/')}>Film konusu ve izleme seçenekleri →</a>
+    </article>
+    <article>
+      <h3>A Monster’s Mother romanı</h3>
+      <p><i>A Cradle Made of Embers</i>, YH’nin resimli karanlık fantastik romanının alt başlığıdır. Elara ile ejderha çocuğu Ember’ın hikâyesini okumak için ilk bölümü ücretsiz deneyebilirsiniz. Metin İngilizcedir; hesap açmanız veya e-posta adresi vermeniz gerekmez. Bu Türkçe rehber, romanın Türkçe çevirisi değildir.</p>
+      <a class="text-link" href={path('tr/read/')}>Ücretsiz ilk bölümü oku (İngilizce) →</a>
+    </article>
+  </div>
+</section>
+<style>
+  .discovery-guide{border-top:1px solid var(--line)}
+  .discovery-options{display:grid;grid-template-columns:1fr 1fr;gap:3rem;margin-top:2rem}
+  .discovery-options h3{font-size:2rem;line-height:1.2}
+  .discovery-options a{display:inline-block;line-height:1.7}
+  @media(max-width:700px){.discovery-options{grid-template-columns:1fr;gap:2.5rem}}
+</style>
