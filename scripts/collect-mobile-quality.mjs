@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { spawn } from 'node:child_process';
 import { once } from 'node:events';
+import { gzipSync } from 'node:zlib';
 
 const config = JSON.parse(fs.readFileSync('lighthouserc.json', 'utf8'));
 const root = path.resolve(config.ci.collect.staticDistDir);
@@ -19,7 +20,15 @@ const server = http.createServer((request, response) => {
       response.writeHead(404).end();
       return;
     }
-    response.writeHead(200, { 'Content-Type': types[path.extname(file)] ?? 'application/octet-stream' });
+    const type = types[path.extname(file)] ?? 'application/octet-stream';
+    // Match compressed static hosting; uncompressed HTML distorts simulated LCP.
+    if (/^(text\/|image\/svg\+xml)/.test(type) && /\bgzip\b/.test(request.headers['accept-encoding'] ?? '')) {
+      const bytes = gzipSync(fs.readFileSync(file));
+      response.writeHead(200, { 'Content-Type': type, 'Content-Encoding': 'gzip', 'Vary': 'Accept-Encoding', 'Content-Length': bytes.length });
+      response.end(bytes);
+      return;
+    }
+    response.writeHead(200, { 'Content-Type': type });
     fs.createReadStream(file).pipe(response);
   } catch {
     response.writeHead(400).end();
