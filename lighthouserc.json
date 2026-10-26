@@ -9,7 +9,11 @@
         "http://localhost/ar/",
         "http://localhost/tr/",
         "http://localhost/story/",
-        "http://localhost/read/"
+        "http://localhost/read/",
+        "http://localhost/movie/",
+        "http://localhost/fr/film/",
+        "http://localhost/ar/film/",
+        "http://localhost/tr/film/"
       ],
       "settings": {
         "formFactor": "mobile",

@@ -3,6 +3,18 @@ import path from 'node:path';
 import assert from 'node:assert/strict';
 import sharp from 'sharp';
 import './verify-turkish-fonts.mjs';
+const mobileConfig=JSON.parse(fs.readFileSync('lighthouserc.json','utf8'));
+const mobileUrls=mobileConfig.ci.collect.url.map(value=>new URL(value));
+assert.equal(mobileConfig.ci.collect.numberOfRuns,3,'Keep three mobile runs per page');
+assert.equal(new Set(mobileUrls.map(url=>url.href)).size,mobileUrls.length,'Do not duplicate mobile test URLs');
+for(const url of mobileUrls) {
+  assert.equal(url.origin,'http://localhost','Mobile checks must use the isolated local production build');
+  assert(fs.existsSync(path.join('dist',url.pathname,'index.html')),`Missing mobile test route: ${url.pathname}`);
+}
+for(const route of ['/','/fr/','/ar/','/tr/','/story/','/read/','/movie/','/fr/film/','/ar/film/','/tr/film/']) {
+  assert(mobileUrls.some(url=>url.pathname===route),`Missing priority mobile route: ${route}`);
+}
+console.log(`Verified mobile quality coverage for ${mobileUrls.length} routes, including all four film pages.`);
 const images=JSON.parse(fs.readFileSync('src/data/images.json','utf8'));
 for(const [name,image] of Object.entries(images)) {
   for(const v of image.variants) for(const format of ['avif','webp']) {
