@@ -1,0 +1,39 @@
+---
+import { getEntry } from 'astro:content';
+import { path } from '../site';
+import { routeFor } from '../data/i18n';
+interface Props { lang?: string; }
+const {lang='en'}=Astro.props;
+const text={
+  en:{title:'Prefer to read?',intro:'Meet Elara and her dragon child, Ember, in the illustrated novel by YH.',note:'The novel and this free first chapter are in English. No sign-up. This is an excerpt, not the complete book.',read:'Read Chapter One free (English)',book:'About the illustrated book',quote:'The First Breath · Opening line in English'},
+  fr:{title:'Et si vous entriez dans le roman ?',intro:'Découvrez Elara et son enfant dragon, Ember, dans le roman illustré de YH.',note:'Le roman et ce premier chapitre gratuit sont en anglais. Sans inscription. Cet extrait n’est pas le livre complet.',read:'Lire le chapitre 1 gratuit (anglais)',book:'Découvrir le livre illustré',quote:'The First Breath · Première phrase en anglais'},
+  tr:{title:'Hikâyeyi okumak ister misiniz?',intro:'YH’nin resimli romanında Elara ve ejderha çocuğu Ember ile tanışın.',note:'Roman ve ücretsiz ilk bölüm İngilizcedir. Kayıt gerekmez. Bu bir örnek bölümdür, kitabın tamamı değildir.',read:'İlk bölümü ücretsiz oku (İngilizce)',book:'Resimli romanı keşfet',quote:'The First Breath · İngilizce açılış cümlesi'},
+  ar:{title:'هل تود اكتشاف الرواية؟',intro:'تعرّف إلى إلارا وطفلها التنين إمبر في الرواية المصوّرة للكاتب YH.',note:'الرواية والفصل الأول المجاني باللغة الإنجليزية. لا يلزم التسجيل. هذا مقتطف وليس الكتاب كاملاً.',read:'اقرأ الفصل الأول مجاناً بالإنجليزية',book:'اكتشف الرواية المصوّرة',quote:'The First Breath · الجملة الافتتاحية بالإنجليزية'}
+};
+const t=text[lang as keyof typeof text]||text.en;
+const book=await getEntry('books','book-one');
+const chapter=await getEntry('chapters','book-one-chapter-one');
+if(!book || !chapter?.body) throw new Error('Missing book or chapter for film reader invitation');
+const opening=chapter.body.trim().split(/\r?\n\s*\r?\n/)[0];
+---
+<section class="film-book-invitation" aria-labelledby="film-reader-invitation">
+  <h2 id="film-reader-invitation">{t.title}</h2>
+  <p class="invitation-book" lang="en" dir="ltr">{book.data.title}<span>{book.data.subtitle} · {book.data.author}</span></p>
+  <p>{t.intro}</p>
+  <blockquote lang="en" dir="ltr" cite={path(routeFor(lang,'read'))}>{opening}</blockquote>
+  <p class="invitation-caption">{t.quote}</p>
+  <p class="invitation-note">{t.note}</p>
+  <div class="invitation-actions"><a class="button" href={path(routeFor(lang,'read'))}>{t.read} →</a><a class="text-link" href={path(routeFor(lang,'story'))}>{t.book} →</a></div>
+</section>
+<style>
+  .film-book-invitation{margin-block:2rem 3rem;padding:clamp(1rem,3vw,2rem);border:1px solid var(--line);border-inline-start:3px solid var(--copper);background:var(--panel);text-align:start}
+  .film-book-invitation h2{font-size:clamp(1.8rem,4vw,2.4rem);margin:0 0 1rem}
+  .invitation-book{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.8rem;color:var(--ivory);line-height:1.2;margin:0}
+  .invitation-book span{display:block;font-family:Manrope,Arial,sans-serif;font-size:.8rem;line-height:1.6;margin-top:.5rem;color:var(--muted)}
+  blockquote{font-family:Georgia,serif;font-style:italic;font-size:1.15rem;line-height:1.7;margin:1rem 0 .5rem;color:var(--ivory)}
+  .film-book-invitation .invitation-caption{font-size:.75rem;margin:0 0 1rem;color:var(--muted)}
+  .film-book-invitation .invitation-note{font-size:.85rem;line-height:1.7}
+  .invitation-actions{display:flex;align-items:center;gap:1rem 1.5rem;flex-wrap:wrap}
+  .invitation-actions .button{white-space:normal;text-align:center;max-width:100%;line-height:1.5}
+  @media(max-width:480px){.invitation-actions{align-items:stretch;flex-direction:column}.invitation-actions .text-link{align-self:flex-start}}
+</style>

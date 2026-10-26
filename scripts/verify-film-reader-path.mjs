@@ -21,3 +21,23 @@ for(const route of ['tr/film/','tr/read/']) assert(discovery.includes(`href="/${
 for(const disclosure of ['Bu site Türkçe dublaj sağlamaz','Metin İngilizcedir','romanın Türkçe çevirisi değildir']) assert(discovery.includes(disclosure),`Missing truthful language disclosure: ${disclosure}`);
 for(const file of ['index.html','fr/index.html','ar/index.html','tr/film/index.html','tr/read/index.html']) assert(!fs.readFileSync(`dist/${file}`,'utf8').includes('id="film-or-book"'),`Homepage-only guide must not leak into ${file}`);
 console.log('Verified exact chapter preview, language/access disclosure, reader destinations and Turkish film alternate.');
+for(const [file,read,book,disclosures] of [
+  ['movie/index.html','/read/','/story/',['in English','No sign-up','not the complete book']],
+  ['fr/film/index.html','/fr/read/','/fr/story/',['en anglais','Sans inscription','pas le livre complet']],
+  ['tr/film/index.html','/tr/read/','/tr/story/',['İngilizcedir','Kayıt gerekmez','kitabın tamamı değildir']],
+  ['ar/film/index.html','/ar/read/','/ar/story/',['باللغة الإنجليزية','لا يلزم التسجيل','ليس الكتاب كاملاً']],
+]) {
+  const film=fs.readFileSync(`dist/${file}`,'utf8');
+  const invitation=film.match(/<section class="film-book-invitation"[^>]*>([\s\S]*?)<\/section>/);
+  assert(invitation,`Missing early reader invitation on ${file}`);
+  assert.equal((film.match(/id="film-reader-invitation"/g)||[]).length,1);
+  assert(invitation[1].includes(opening[0]),'Use the actual opening paragraph, not a fabricated teaser');
+  assert(/<blockquote[^>]*lang="en"[^>]*dir="ltr"/.test(invitation[1]),'Mark the excerpt as English even on RTL pages');
+  for(const disclosure of disclosures) assert(invitation[1].includes(disclosure),`Missing invitation disclosure on ${file}: ${disclosure}`);
+  for(const href of [read,book]) assert(invitation[1].includes(`href="${href}"`),`Missing localized invitation destination: ${href}`);
+  const playerPosition=film.indexOf('data-video-player');
+  assert(playerPosition>=0 && film.indexOf(invitation[0])>playerPosition,'Keep the film player before the book invitation');
+  assert(!/<iframe\b/.test(film),'Do not auto-load YouTube');
+}
+for(const file of ['index.html','fr/index.html','tr/read/index.html','story/index.html']) assert(!fs.readFileSync(`dist/${file}`,'utf8').includes('id="film-reader-invitation"'),'Keep this invitation scoped to film pages');
+console.log('Verified early film-to-book invitation, real excerpt, translated disclosures and localized links on four film pages.');

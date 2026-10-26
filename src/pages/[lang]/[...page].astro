@@ -2,6 +2,7 @@
 import ArtImage from "../../components/ArtImage.astro";
 import Layout from '../../layouts/Layout.astro';
 import VideoPlayer from '../../components/VideoPlayer.astro';
+import FilmBookInvitation from '../../components/FilmBookInvitation.astro';
 import TurkishFilmGuide from '../../components/TurkishFilmGuide.astro';
 import LocalizedBookGuide from '../../components/LocalizedBookGuide.astro';
 import ReadingTools from '../../components/ReadingTools.astro';
@@ -31,7 +32,7 @@ const chapter=page==='read'?await getEntry('chapters','book-one-chapter-one'):un
 {page.startsWith('characters/') && <article class="prose"><div class:list={['character-portrait',ids[charIndex]]}><ArtImage src={path(ids[charIndex]+'-scene.webp')} alt={title} width="1024" height="1536"/></div><p>{t.characters[charIndex][2]}</p><a class="text-link" href={local('read')}>{u.read} →</a></article>}
 {page==='blog' && <section class="section journal-grid journal-index">{t.essays.map((e:string[],i:number)=><a class="journal-card" href={local('blog/'+essayIds[i])}><div class="journal-art editorial-art"><ArtImage src={path(journalArt(essayIds[i]).file)} alt="" width="1200" height="800" loading="lazy"/></div><p class="eyebrow">{t.journalTitle} · 0{i+1}</p><h2>{e[0]}</h2><p>{e[1]}</p><span class="text-link">{t.essay} →</span></a>)}</section>}
 {page.startsWith('blog/') && <article><figure class="article-visual editorial-art"><ArtImage src={path(journalArt(essayIds[essayIndex]).file)} alt="" width="1200" height="800"/></figure><div class="prose">{t.essays[essayIndex].slice(2).map((p:string)=><p>{p}</p>)}<a class="text-link" href={local('read')}>{u.read} →</a></div></article>}
-{page==='film' && <article class="prose localized-watch"><VideoPlayer lang={lang}/><h2>{t.filmTitle}</h2><p>{t.filmIntro}</p><p>{t.filmLang}</p>{lang==='tr' && <TurkishFilmGuide/>}<h2 dir="ltr">A Monster’s Mother</h2><p>{t.filmDistinction}</p><a class="text-link" href={local('read')}>{u.read} →</a></article>}
+{page==='film' && <article class="prose localized-watch"><VideoPlayer lang={lang}/><FilmBookInvitation lang={lang}/><h2>{t.filmTitle}</h2><p>{t.filmIntro}</p><p>{t.filmLang}</p>{lang==='tr' && <TurkishFilmGuide/>}<h2 dir="ltr">A Monster’s Mother</h2><p>{t.filmDistinction}</p><a class="text-link" href={local('read')}>{u.read} →</a></article>}
 {page==='read' && <><ReadingTools lang={lang}/><article class="prose"><p>{t.readIntro}</p><div lang="en" dir="ltr" data-reading-content><h2>The First Breath</h2>{Chapter && <Chapter/>}</div><div class="actions"><a class="text-link" href={local('characters')}>{t.charactersTitle} →</a><a class="text-link" href={local('world')}>{t.worldTitle} →</a></div></article></>}
 <section class="book-band"><p>{t.note}</p><a class="button" href="https://www.amazon.com/dp/B0HKYDF7BY" target="_blank" rel="noopener noreferrer">{u.buy} · Amazon ↗</a></section>
 </Layout>
