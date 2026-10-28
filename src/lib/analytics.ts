@@ -1,3 +1,4 @@
+import { VIDEO_EVENT, VIDEO_ID, type VideoSignal } from './video.ts';
 export const CONSENT_KEY = 'mm.analytics-consent.v1';
 export const CONSENT_SECONDS = 180 * 24 * 60 * 60;
 type Choice = 'granted' | 'denied';
@@ -132,12 +133,33 @@ export function initAnalytics(root: HTMLElement, win: AnalyticsWindow = window, 
   // Recheck consent after backgrounding or a long-open page.
   doc.addEventListener('visibilitychange', () => { if (doc.visibilityState === 'visible') sync(); });
   win.setInterval(() => { if (loaded && !current()) sync(); }, 60_000);
+  // This is the sole GA4 video sender. Enhanced-measurement video stays off.
+  doc.addEventListener(VIDEO_EVENT, event => {
+    if (!loaded || !current() || win.location.origin !== origin) return;
+    const signal = (event as CustomEvent<VideoSignal>).detail;
+    if (!signal || !['video_load','video_start','video_progress','video_complete','video_error'].includes(signal.name)) return;
+    const params: Record<string, unknown> = {
+      send_to: id, video_provider: 'youtube', video_url: `https://www.youtube.com/watch?v=${VIDEO_ID}`,
+      video_title: 'She Gave Birth to a Dragon | The Mothers Monster',
+      language: doc.documentElement.lang, page_location: origin + win.location.pathname,
+    };
+    if (signal.name === 'video_progress' && ![10,25,50,75].includes(signal.percent!)) return;
+    if (signal.name === 'video_progress' || signal.name === 'video_complete') params.video_percent = signal.name === 'video_complete' ? 100 : signal.percent;
+    for (const [key,value] of [['video_current_time',signal.current],['video_duration',signal.duration]] as const) {
+      if (typeof value === 'number' && Number.isFinite(value) && value >= 0 && value < 86400) params[key] = Math.round(value);
+    }
+    win.gtag?.('event', signal.name, params);
+  });
   doc.addEventListener('click', event => {
     if (!loaded || !current()) return;
     const target = event.target;
     if (!(target instanceof Element)) return;
     const anchor = target.closest<HTMLAnchorElement>('a[href]');
     if (!anchor) return;
+    if (anchor.href === `https://www.youtube.com/watch?v=${VIDEO_ID}`) win.gtag?.('event', 'youtube_click', {
+      send_to: id, link_url: `https://www.youtube.com/watch?v=${VIDEO_ID}`,
+      language: doc.documentElement.lang, page_location: origin + win.location.pathname,
+    });
     const amazon = amazonDestination(anchor.href);
     const chapter = chapterDestination(anchor.href, origin);
     const destination = amazon || chapter;

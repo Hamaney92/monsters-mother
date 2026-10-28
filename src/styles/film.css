@@ -1,0 +1,20 @@
+/* Keep the film's first action visible instead of a full-height editorial masthead. */
+body:has(.localized-watch) .page-heading{padding:26px 6% 20px}
+body:has(.localized-watch) .page-heading .eyebrow{margin-bottom:12px}
+body:has(.localized-watch) .page-heading h1{font-size:clamp(2rem,4vw,3.5rem);line-height:1.1}
+body:has(.localized-watch) .page-heading>p:not(.eyebrow){margin-top:14px;line-height:1.6}
+body .localized-watch{padding-top:22px}
+body .watch-page{padding-top:28px}
+body .watch-page h1{font-size:clamp(2.5rem,5vw,4rem);line-height:1.05}
+body .watch-page h1 br{display:none}
+body .watch-page h1 em::before{content:' '}
+body .watch-page .eyebrow{margin-bottom:12px}
+body .watch-page .lead{margin:16px 0;line-height:1.6}
+body .watch-page nav{margin-bottom:16px}
+@media(max-width:650px){
+  body:has(.localized-watch) .page-heading{padding-top:20px}
+  body:has(.localized-watch) .page-heading h1{font-size:2rem}
+  body:has(.localized-watch) .page-heading>p:not(.eyebrow){font-size:.92rem}
+  body .watch-page .lead{font-size:.95rem}
+  body .watch-page nav{font-size:.8rem;line-height:1.8}
+}

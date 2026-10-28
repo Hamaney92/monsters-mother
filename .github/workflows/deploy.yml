@@ -25,6 +25,7 @@ jobs:
       - run: npm ci
       - run: npm run check
       - run: npm run test:analytics
+      - run: node --experimental-strip-types --test scripts/video.test.mjs
       - run: npm run build
         env:
           SITE_URL: https://mothersmonster.com

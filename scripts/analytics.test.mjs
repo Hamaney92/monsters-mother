@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { VIDEO_EVENT } from '../src/lib/video.ts';
 import { CONSENT_KEY, CONSENT_SECONDS, parseConsent, cleanReferrer, amazonDestination, chapterDestination, initAnalytics } from '../src/lib/analytics.ts';
 
 const stored = (value, offset = CONSENT_SECONDS * 1000) => JSON.stringify({ version: 1, value, expires: Date.now() + offset });
@@ -36,6 +37,24 @@ function fixture({ saved = null, origin = 'https://mothersmonster.com', blocked 
   initAnalytics(root, win, doc);
   return { root, win, doc, state, elements, click, commands };
 }
+
+test('video signals need consent; fields are allowlisted and withdrawal stops collection', () => {
+  const f=fixture();
+  const detail={name:'video_start',current:0,duration:1700,email:'private@example.com'};
+  f.doc.emit(VIDEO_EVENT,{detail}); assert.equal(f.commands().length,0);
+  f.click('[data-privacy-accept]');
+  f.doc.emit(VIDEO_EVENT,{detail});
+  const event=f.commands().at(-1);
+  assert.equal(event[1],'video_start'); assert.equal(event[2].email,undefined);
+  assert.equal(event[2].video_duration,1700);
+  assert.equal(event[2].video_url,'https://www.youtube.com/watch?v=dqCGNrQ6N_o');
+  const count=f.commands().length;
+  f.doc.emit(VIDEO_EVENT,{detail:{name:'purchase'}});
+  f.doc.emit(VIDEO_EVENT,{detail:{name:'video_progress',percent:99}});
+  assert.equal(f.commands().length,count);
+  f.click('[data-privacy-reject]'); const after=f.commands().length;
+  f.doc.emit(VIDEO_EVENT,{detail}); assert.equal(f.commands().length,after);
+});
 
 test('consent accepts valid choices and rejects corrupt, expired, unknown, excessive or future-version data', () => {
   assert.equal(parseConsent(stored('granted'))?.value, 'granted');
