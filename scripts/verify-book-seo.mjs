@@ -51,7 +51,7 @@ for(const lang of ['en','fr','ar','tr']) {
   const html=fs.readFileSync(`dist/${prefix}index.html`,'utf8');
   for(const nav of ['desktop-nav','mobile-nav']) {
     const match=html.match(new RegExp(`<nav[^>]*class="${nav}"[^>]*>(.*?)</nav>`,'s'));
-    assert(match?.[1].includes(`href="/${prefix}read/"`),`Missing chapter link in ${lang} ${nav}`);
+    assert(match?.[1].includes(`href="/${prefix}read/book/"`),`Missing chapter link in ${lang} ${nav}`);
   }
 }
 const ember=fs.readFileSync('dist/characters/ember/index.html','utf8');

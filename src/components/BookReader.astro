@@ -1,0 +1,70 @@
+---
+import {readingRoute,readerUi,type ReadingBook} from '../data/reader';
+import {path} from '../site';
+interface Props{book:ReadingBook;chapterNumber?:number}
+const {book,chapterNumber=0}=Astro.props;
+const t=readerUi[book.language];
+const chapter=book.chapters.find(c=>c.number===chapterNumber);
+const format=(n:number)=>new Intl.NumberFormat(book.language).format(n);
+const diagrams={
+ en:{'MAP-22':'Route map: a dotted trail follows the river from a mill, over a bridge and past a quarry towards the mountains and waterfall.','STUDY-24':'The First Nest: a central stone basin and heart-stone, connected by grooves to the surrounding nests.'},
+ fr:{'MAP-22':'Carte du trajet : un chemin pointillé longe la rivière depuis un moulin, traverse un pont et passe près d’une carrière vers les montagnes et la cascade.','STUDY-24':'Le premier nid : un bassin central et sa pierre-cœur, reliés par des rainures aux nids qui les entourent.'},
+ tr:{'MAP-22':'Yol haritası: noktalı patika değirmenden başlayıp nehir boyunca ilerler, köprüyü geçerek taş ocağından dağlara ve şelaleye uzanır.','STUDY-24':'İlk Yuva: ortadaki taş havuz ve yürek taşı, oluklarla çevredeki yuvalara bağlanır.'},
+ ar:{'MAP-22':'خريطة الطريق: مسار منقّط بمحاذاة النهر يبدأ من طاحونة ويعبر جسرًا ويمرّ بمقلع نحو الجبال والشلال.','STUDY-24':'العش الأول: حوض حجري في الوسط وحجر القلب، تصل بينهما وبين الأعشاش المحيطة أخاديد.'}
+};
+---
+<section class="book-reader" data-book-reader data-language={book.language} data-chapter={chapterNumber} data-reading-base={path(readingRoute(book.language))}>
+  <header class:list={["reader-heading",{compact:!!chapter}]}>
+    <p class="eyebrow">YH · {t.complete}</p>
+    <h1 dir="ltr">{book.title}</h1><p class="reader-subtitle" dir="ltr">{book.subtitle}</p>
+    {book.translation==='assisted' && <details class="translation-disclosure"><summary>{t.translationLabel}</summary><p class="translation-note">{t.translation} <a href={path(readingRoute('en',chapterNumber))} lang="en">{t.original} →</a></p></details>}
+    <p class="translation-note">{t.paper}</p>
+  </header>
+  <div class="reader-preferences">
+    <label><input type="checkbox" data-remember-reading/> {t.remember}</label>
+    <a data-resume-reading hidden>{t.resume} →</a>
+  </div>
+  {!chapter ? <>
+    <p>{t.note}</p>
+    <a class="button" href={path(readingRoute(book.language,1))}>{t.begin} →</a>
+    <nav class="chapter-contents" aria-label={t.contents}>
+      <h2>{t.contents}</h2>
+      <ol>{book.chapters.map(c=><li><a href={path(readingRoute(book.language,c.number))}><span>{format(c.number)}</span>{c.title}</a></li>)}</ol>
+    </nav>
+  </> : <>
+    <nav class="reader-navigation" aria-label={t.contents}>
+      <a href={path(readingRoute(book.language))}>☰ {t.contents}</a>
+      <span>{t.chapter} <bdi dir="ltr">{format(chapter.number)} / {format(book.chapters.length)}</bdi></span>
+    </nav>
+    <div class="reader-options"><span>{t.size}</span><button type="button" data-reader-size="smaller" aria-label={t.small}>A−</button><button type="button" data-reader-size="larger" aria-label={t.large}>A+</button></div>
+    <progress data-reader-progress max="100" value="0" aria-label={t.progress}></progress>
+    <article class="chapter-text" data-chapter-text lang={book.language} dir={book.language==='ar'?'rtl':'ltr'}>
+      <h2>{chapter.title}</h2>
+      {chapter.paragraphs.map((paragraph,index)=><>
+        {/^[*\s-]+$/.test(paragraph)?<hr/>:<p>{paragraph}</p>}
+        {chapter.illustrations.filter(image=>image.afterParagraph===index+1).map(image=><figure><img src={path(image.src)} width={image.width} height={image.height} loading="lazy" decoding="async" alt={diagrams[book.language][image.id as 'MAP-22'|'STUDY-24']||`${t.art} · ${t.chapter} ${format(chapter.number)}`}/></figure>)}
+      </>)}
+    </article>
+    <nav class="reader-next" aria-label={t.contents}>
+      {chapter.number>1 && <a href={path(readingRoute(book.language,chapter.number-1))}>← {t.previous}</a>}
+      {chapter.number<book.chapters.length ? <a class="button" href={path(readingRoute(book.language,chapter.number+1))}>{t.next} →</a> : <p>{t.end}</p>}
+    </nav>
+    <p><a href={path(readingRoute(book.language))}>{t.back}</a> · <a href={`mailto:contact@mothersmonster.com?subject=${encodeURIComponent(`Reading · ${book.language} · Chapter ${chapter.number}`)}`}>{t.feedback}</a></p>
+  </>}
+</section>
+<script>
+import {initBookReader} from '../lib/book-reader';
+document.querySelectorAll<HTMLElement>('[data-book-reader]').forEach(initBookReader);
+</script>
+<style>
+.book-reader{max-width:900px;margin:0 auto;padding:32px 25px 64px;overflow-wrap:anywhere}
+.book-reader[data-language=ar] .reader-heading .eyebrow{letter-spacing:0;font-size:.8rem;text-transform:none}
+.reader-heading{text-align:center;margin-bottom:28px}.reader-heading h1{font-size:clamp(2.5rem,6vw,4.5rem);line-height:1.1}.reader-heading .eyebrow{margin-bottom:14px;line-height:1.8}
+.reader-heading.compact h1{font-size:2.3rem;margin-block:10px}.reader-heading.compact .reader-subtitle{font-size:1rem;margin-block:10px}.reader-heading.compact .eyebrow{font-size:.65rem;margin-block:0}.translation-disclosure{font-size:.82rem;line-height:1.7;max-width:680px;margin:12px auto}.translation-disclosure summary{cursor:pointer;text-decoration:underline;text-underline-offset:3px}.reader-subtitle{font-family:Georgia,serif;font-size:1.3rem;color:var(--copper);margin:14px 0 20px}.translation-note{font-size:.85rem;line-height:1.7;max-width:680px;margin:10px auto}.translation-note a{text-decoration:underline}
+.reader-preferences{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding-block:16px;border-block:1px solid var(--line);margin-bottom:24px;font-size:.9rem}.reader-preferences label{display:flex;align-items:center;gap:9px;min-height:44px}.reader-preferences input{width:20px;height:20px;accent-color:var(--copper)}.reader-preferences a{text-decoration:underline}.reader-preferences [hidden]{display:none}
+.chapter-contents h2{font-size:2.4rem;margin-top:40px}.chapter-contents ol{list-style:none;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 24px;padding:0}.chapter-contents li{border-bottom:1px solid var(--line)}.chapter-contents a{display:flex;gap:14px;padding:18px 4px;min-height:48px}.chapter-contents span{color:var(--copper);min-width:1.5em;font-variant-numeric:tabular-nums}
+.reader-navigation,.reader-next{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}.reader-navigation{font-size:.9rem;padding:12px 0}.reader-navigation a,.reader-next>a:not(.button){text-decoration:underline}.reader-next{border-top:1px solid var(--line);padding:28px 0 12px;margin-top:35px}
+.reader-options{display:flex;align-items:center;gap:12px;margin:20px 0;font-size:.9rem}.reader-options button{border:1px solid var(--line);background:var(--panel);color:inherit;min-width:44px;min-height:44px;cursor:pointer}.reader-options button:disabled{opacity:.4}.reader-options button:focus-visible{outline:2px solid var(--copper);outline-offset:3px}progress{display:block;width:100%;height:4px;accent-color:var(--copper)}
+.chapter-text{max-width:720px;margin:38px auto 0;--reader-scale:1}.chapter-text h2{font-size:2.6rem;line-height:1.2;margin-bottom:30px}.chapter-text p{font-family:Georgia,'Times New Roman',serif;font-size:calc(1.14rem * var(--reader-scale));line-height:1.9;color:#e5dccd;margin:0 0 1.2em;text-align:start}.chapter-text[lang=ar] p{font-family:Tahoma,Arial,sans-serif;line-height:2;font-size:calc(1.2rem * var(--reader-scale))}.chapter-text figure{margin:32px auto;max-width:520px;background:#fff}.chapter-text img{display:block;width:100%;height:auto}.chapter-text hr{width:70px;margin:32px auto;border:0;border-top:1px solid var(--copper)}
+@media(max-width:650px){.book-reader{padding:25px 6% 45px}.chapter-contents ol{grid-template-columns:1fr}.chapter-text{margin-top:28px}.chapter-text h2{font-size:2.2rem}.reader-next .button{white-space:normal}.reader-heading h1{font-size:2.7rem}}
+</style>

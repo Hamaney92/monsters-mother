@@ -1,0 +1,14 @@
+---
+import Layout from '../layouts/Layout.astro';
+import BookReader from '../components/BookReader.astro';
+import {readingBooks,readingRoute,readerUi,type ReadingBook} from '../data/reader';
+export function getStaticPaths(){return readingBooks.flatMap(book=>[0,...book.chapters.map(c=>c.number)].map(chapterNumber=>({params:{reader:readingRoute(book.language,chapterNumber).replace(/\/$/,'')},props:{book,chapterNumber}})));}
+const {book,chapterNumber}=Astro.props as {book:ReadingBook;chapterNumber:number};
+const chapter=book.chapters.find(c=>c.number===chapterNumber);
+const t=readerUi[book.language];
+const title=chapter?`${t.chapter} ${chapter.number} — ${chapter.title}`:t.free;
+const description=`${book.title}: ${book.subtitle} · YH. ${t.complete}${chapter?' · '+chapter.title:''}`;
+---
+<Layout lang={book.language} title={title} description={description} schema={{'@context':'https://schema.org','@type':chapter?'Chapter':'Book',name:chapter?.title||book.title,inLanguage:book.language,author:{'@type':'Person',name:'YH'},isAccessibleForFree:true,...(chapter?{position:chapter.number,isPartOf:{'@type':'Book',name:book.title}}:{numberOfPages:undefined})}}>
+<BookReader book={book} chapterNumber={chapterNumber}/>
+</Layout>

@@ -1,0 +1,14 @@
+---
+import {readingBooks,readingRoute,readerUi,type ReadingLanguage} from '../data/reader';
+import {path} from '../site';
+const {lang='en'}=Astro.props;
+const book=readingBooks.find(book=>book.language===lang);
+const t=readerUi[(book?.language||'en') as ReadingLanguage];
+---
+{book && <aside class="full-book-invitation" aria-label={t.free}>
+  <h2>{t.free}</h2><p>{t.complete}</p>
+  <a class="button" href={path(readingRoute(lang))}>{t.begin} →</a>
+</aside>}
+<style>
+.full-book-invitation{max-width:900px;margin:28px auto 48px;padding:28px 6%;border-block:1px solid var(--line);text-align:center}.full-book-invitation h2{font-size:clamp(1.7rem,4vw,2.4rem);line-height:1.25}.full-book-invitation .button{white-space:normal;line-height:1.5}
+</style>

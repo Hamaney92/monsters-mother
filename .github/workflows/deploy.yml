@@ -26,6 +26,7 @@ jobs:
       - run: npm run check
       - run: npm run test:analytics
       - run: node --experimental-strip-types --test scripts/video.test.mjs
+      - run: node --experimental-strip-types --test scripts/reader.test.mjs
       - run: npm run build
         env:
           SITE_URL: https://mothersmonster.com
@@ -38,6 +39,7 @@ jobs:
       - run: node scripts/verify-journal-guide.mjs
       - run: node scripts/verify-favicon.mjs
       - run: node scripts/verify-film-reader-path.mjs
+      - run: node scripts/verify-full-reader.mjs
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

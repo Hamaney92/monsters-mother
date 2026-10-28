@@ -220,3 +220,22 @@ test('chapter clicks preserve the public source page and require current consent
     else globalThis.Element=originalElement;
   }
 });
+
+
+test('chapter scroll requires consent and validates the current chapter and milestone',()=>{
+ const f=fixture();f.win.location.pathname='/tr/read/book/19/';
+ const emit=(detail)=>f.doc.emit('mm:chapter-scroll',{detail});
+ emit({chapter:19,percent:25});assert.equal(f.commands().length,0);
+ f.click('[data-privacy-accept]');
+ const n=f.commands().length;
+ for(const detail of [{chapter:18,percent:25},{chapter:19,percent:90},{chapter:'19',percent:25},null])emit(detail);
+ assert.equal(f.commands().length,n);
+ emit({chapter:19,percent:50});
+ assert.deepEqual(f.commands().at(-1),['event','chapter_scroll',{send_to:'G-EX3NWTTVFR',chapter_number:19,scroll_percent:50,language:'fr',page_location:'https://mothersmonster.com/tr/read/book/19/'}]);
+ f.click('[data-privacy-reject]');const end=f.commands().length;
+ emit({chapter:19,percent:75});assert.equal(f.commands().length,end);
+});
+test('full-book chapter destinations never include query data or out-of-range chapters',()=>{
+ assert.equal(chapterDestination('https://mothersmonster.com/tr/read/book/26/?private=x#x','https://mothersmonster.com'),'https://mothersmonster.com/tr/read/book/26/');
+ for(const route of ['27/','0/','01/','../secret/'])assert.equal(chapterDestination('https://mothersmonster.com/read/book/'+route,'https://mothersmonster.com'),null);
+});

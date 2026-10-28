@@ -17,8 +17,8 @@ assert(!/<iframe\b/.test(html), 'YouTube must remain click-to-load');
 const turkishHome=fs.readFileSync('dist/tr/index.html','utf8');
 const discovery=turkishHome.match(/<section class="section discovery-guide"[^>]*>([\s\S]*?)<\/section>/)?.[1];
 assert(discovery,'Turkish homepage must distinguish film discovery from reading the book');
-for(const route of ['tr/film/','tr/read/']) assert(discovery.includes(`href="/${route}"`),`Missing Turkish discovery destination: ${route}`);
-for(const disclosure of ['Bu site Türkçe dublaj sağlamaz','Metin İngilizcedir','romanın Türkçe çevirisi değildir']) assert(discovery.includes(disclosure),`Missing truthful language disclosure: ${disclosure}`);
+for(const route of ['tr/film/','tr/read/book/']) assert(discovery.includes(`href="/${route}"`),`Missing Turkish discovery destination: ${route}`);
+for(const disclosure of ['Bu site Türkçe dublaj sağlamaz','26 bölümün tamamıyla Türkçe','basılı kitap İngilizcedir']) assert(discovery.includes(disclosure),`Missing truthful language disclosure: ${disclosure}`);
 for(const file of ['index.html','fr/index.html','ar/index.html','tr/film/index.html','tr/read/index.html']) assert(!fs.readFileSync(`dist/${file}`,'utf8').includes('id="film-or-book"'),`Homepage-only guide must not leak into ${file}`);
 console.log('Verified exact chapter preview, language/access disclosure, reader destinations and Turkish film alternate.');
 for(const [file,read,book,disclosures] of [

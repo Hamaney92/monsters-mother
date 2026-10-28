@@ -55,7 +55,8 @@ for(const file of htmlFiles) {
 }
 const sitemap=fs.readFileSync('dist/sitemap-0.xml','utf8');
 const urls=[...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m=>m[1]);
-assert.equal(urls.length,60);
+const editions=fs.readdirSync('src/data/reading').filter(f=>f.endsWith('.json')).length;
+assert.equal(urls.length,60+27*editions);
 for(const url of urls) {
   const u=new URL(url);
   assert.equal(u.origin,'https://mothersmonster.com');
@@ -65,4 +66,4 @@ for(const url of urls) {
 }
 const tr=fs.readFileSync('dist/tr/film/index.html','utf8');
 for(const q of ['konusu nedir?','ne demek?','Türkçe dublaj']) assert(tr.includes(q),`Missing answer: ${q}`);
-console.log(`Verified delivery budgets, ${htmlFiles.length} pages, responsive variants and 60 indexable canonical sitemap URLs.`);
+console.log(`Verified delivery budgets, ${htmlFiles.length} pages, responsive variants and ${urls.length} indexable canonical sitemap URLs.`);

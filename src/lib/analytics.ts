@@ -38,7 +38,7 @@ export function chapterDestination(value: string, origin: string): string | null
   try {
     const url = new URL(value);
     if (url.protocol !== 'https:' || url.origin !== origin || url.username || url.password) return null;
-    return /^\/(?:fr\/|ar\/|tr\/)?read\/$/.test(url.pathname) ? origin + url.pathname : null;
+    return /^\/(?:fr\/|ar\/|tr\/)?read\/(?:book\/(?:([1-9]|1[0-9]|2[0-6])\/)?)?$/.test(url.pathname) ? origin + url.pathname : null;
   } catch { return null; }
 }
 
@@ -149,6 +149,16 @@ export function initAnalytics(root: HTMLElement, win: AnalyticsWindow = window, 
       if (typeof value === 'number' && Number.isFinite(value) && value >= 0 && value < 86400) params[key] = Math.round(value);
     }
     win.gtag?.('event', signal.name, params);
+  });
+  doc.addEventListener('mm:chapter-scroll', event => {
+    if (!loaded || !current() || win.location.origin !== origin) return;
+    const signal=(event as CustomEvent<{chapter:number;percent:number}>).detail;
+    const chapter=Number(win.location.pathname.match(/\/read\/book\/(\d+)\/$/)?.[1]);
+    if(!signal || !Number.isInteger(signal.chapter) || signal.chapter<1 || signal.chapter>26 || signal.chapter!==chapter || ![25,50,75,100].includes(signal.percent))return;
+    win.gtag?.('event','chapter_scroll',{
+      send_to:id,chapter_number:signal.chapter,scroll_percent:signal.percent,
+      language:doc.documentElement.lang,page_location:origin+win.location.pathname,
+    });
   });
   doc.addEventListener('click', event => {
     if (!loaded || !current()) return;
