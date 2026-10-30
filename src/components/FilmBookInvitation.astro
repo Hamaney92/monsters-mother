@@ -8,7 +8,7 @@ const {lang='en'}=Astro.props;
 const text={
   en:{title:'Prefer to read?',intro:'Meet Elara and her dragon child, Ember, in the illustrated novel by YH.',note:'The paperback and this first-chapter excerpt are in English. No sign-up. This is an excerpt, not the complete book.',read:'Read Chapter One free (English)',book:'About the illustrated book',quote:'The First Breath · Opening line in English'},
   fr:{title:'Et si vous entriez dans le roman ?',intro:'Découvrez Elara et son enfant dragon, Ember, dans le roman illustré de YH.',note:'Le broché et cet extrait du premier chapitre sont en anglais. Sans inscription. Cet extrait n’est pas le livre complet.',read:'Lire le chapitre 1 gratuit (anglais)',book:'Découvrir le livre illustré',quote:'The First Breath · Première phrase en anglais'},
-  tr:{title:'Hikâyeyi okumak ister misiniz?',intro:'YH’nin resimli romanında Elara ve ejderha çocuğu Ember ile tanışın.',note:'Basılı kitap ve bu ilk bölüm örneği İngilizcedir. Kayıt gerekmez. Bu bir örnek bölümdür, kitabın tamamı değildir.',read:'İlk bölümü ücretsiz oku (İngilizce)',book:'Resimli romanı keşfet',quote:'The First Breath · İngilizce açılış cümlesi'},
+  tr:{title:'Hikâyeyi okumak ister misiniz?',intro:'YH’nin resimli romanında Elara ve ejderha çocuğu Ember ile tanışın.',note:'Birinci kitabın tamamını Türkçe ücretsiz okuyabilirsiniz: 26 bölüm, kayıt gerektirmez. Amazon’daki basılı kitap İngilizcedir.',read:'İlk bölümü İngilizce oku',book:'Resimli romanı keşfet',quote:'İlk Nefes · Türkçe açılış cümlesi'},
   ar:{title:'هل تود اكتشاف الرواية؟',intro:'تعرّف إلى إلارا وطفلها التنين إمبر في الرواية المصوّرة للكاتب YH.',note:'النسخة الورقية وهذا المقتطف من الفصل الأول باللغة الإنجليزية. لا يلزم التسجيل. هذا مقتطف وليس الكتاب كاملاً.',read:'اقرأ الفصل الأول مجاناً بالإنجليزية',book:'اكتشف الرواية المصوّرة',quote:'The First Breath · الجملة الافتتاحية بالإنجليزية'}
 };
 const t=text[lang as keyof typeof text]||text.en;
@@ -16,16 +16,17 @@ const completeBook=readingBooks.find(book=>book.language===lang);
 const book=await getEntry('books','book-one');
 const chapter=await getEntry('chapters','book-one-chapter-one');
 if(!book || !chapter?.body) throw new Error('Missing book or chapter for film reader invitation');
-const opening=chapter.body.trim().split(/\r?\n\s*\r?\n/)[0];
+const opening=lang==='tr'?completeBook?.chapters[0].paragraphs[0]:chapter.body.trim().split(/\r?\n\s*\r?\n/)[0];
+if(!opening) throw new Error('Missing opening paragraph for film reader invitation');
 ---
 <section class="film-book-invitation" aria-labelledby="film-reader-invitation">
   <h2 id="film-reader-invitation">{t.title}</h2>
   <p class="invitation-book" lang="en" dir="ltr">{book.data.title}<span>{book.data.subtitle} · {book.data.author}</span></p>
   <p>{t.intro}</p>
-  <blockquote lang="en" dir="ltr" cite={path(routeFor(lang,'read'))}>{opening}</blockquote>
+  <blockquote lang={lang==='tr'?'tr':'en'} dir="ltr" cite={path(lang==='tr'?readingRoute('tr',1):routeFor(lang,'read'))}>{opening}</blockquote>
   <p class="invitation-caption">{t.quote}</p>
   <p class="invitation-note">{t.note}</p>
-  <div class="invitation-actions">{completeBook && <a class="button" href={path(readingRoute(lang))}>{readerUi[completeBook.language].free} →</a>}<a class="text-link" href={path(routeFor(lang,'read'))}>{t.read} →</a><a class="text-link" href={path(routeFor(lang,'story'))}>{t.book} →</a></div>
+  <div class="invitation-actions">{completeBook && <a class="button" href={path(readingRoute(lang,lang==='tr'?1:0))}>{lang==='tr'?'Kitabı Türkçe ücretsiz oku':readerUi[completeBook.language].free} →</a>}<a class="text-link" href={path(routeFor(lang,'read'))}>{t.read} →</a><a class="text-link" href={path(routeFor(lang,'story'))}>{t.book} →</a></div>
 </section>
 <style>
   .film-book-invitation{margin-block:2rem 3rem;padding:clamp(1rem,3vw,2rem);border:1px solid var(--line);border-inline-start:3px solid var(--copper);background:var(--panel);text-align:start}
