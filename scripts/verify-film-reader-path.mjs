@@ -23,7 +23,7 @@ for(const disclosure of ['Bu site Türkçe dublaj sağlamaz','26 bölümün tama
 for(const file of ['index.html','fr/index.html','ar/index.html','tr/film/index.html','tr/read/index.html']) assert(!fs.readFileSync(`dist/${file}`,'utf8').includes('id="film-or-book"'),`Homepage-only guide must not leak into ${file}`);
 console.log('Verified exact chapter preview, language/access disclosure, reader destinations and Turkish film alternate.');
 for(const [file,read,book,disclosures] of [
-  ['movie/index.html','/read/','/story/',['in English','No sign-up','not the complete book']],
+  ['movie/index.html','/read/','/story/',['Read the complete book free in English: 26 chapters, no sign-up. The paperback edition on Amazon is in English.']],
   ['fr/film/index.html','/fr/read/','/fr/story/',['en anglais','Sans inscription','pas le livre complet']],
   ['tr/film/index.html','/tr/read/','/tr/story/',['Birinci kitabın tamamını Türkçe ücretsiz okuyabilirsiniz: 26 bölüm, kayıt gerektirmez.','Amazon’daki basılı kitap İngilizcedir.']],
   ['ar/film/index.html','/ar/read/','/ar/story/',['باللغة الإنجليزية','لا يلزم التسجيل','ليس الكتاب كاملاً']],
@@ -42,6 +42,11 @@ for(const [file,read,book,disclosures] of [
   } else {
     assert(invitation[1].includes(opening[0]),'Use the actual opening paragraph, not a fabricated teaser');
     assert(/<blockquote[^>]*lang="en"[^>]*dir="ltr"/.test(invitation[1]),'Mark the excerpt as English even on RTL pages');
+    if(file==='movie/index.html') {
+      assert(/<a\b[^>]*class="button"[^>]*href="\/read\/book\/1\/"[^>]*>Read Book One free →<\/a>/.test(invitation[1]),'Begin the complete English book directly');
+      assert(/<a\b[^>]*class="text-link"[^>]*href="\/read\/"[^>]*>Read the Chapter One excerpt →<\/a>/.test(invitation[1]),'Keep the Chapter One excerpt as a distinct secondary option');
+      assert(fs.existsSync('dist/read/book/1/index.html'),'The English chapter destination must exist');
+    }
   }
   for(const disclosure of disclosures) assert(invitation[1].includes(disclosure),`Missing invitation disclosure on ${file}: ${disclosure}`);
   for(const href of [read,book]) assert(invitation[1].includes(`href="${href}"`),`Missing localized invitation destination: ${href}`);
