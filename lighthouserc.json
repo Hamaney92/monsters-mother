@@ -13,7 +13,13 @@
         "http://localhost/movie/",
         "http://localhost/fr/film/",
         "http://localhost/ar/film/",
-        "http://localhost/tr/film/"
+        "http://localhost/tr/film/",
+        "http://localhost/read/book/1/",
+        "http://localhost/fr/read/book/1/",
+        "http://localhost/tr/read/book/",
+        "http://localhost/tr/read/book/1/",
+        "http://localhost/tr/read/book/2/",
+        "http://localhost/ar/read/book/1/"
       ],
       "settings": {
         "formFactor": "mobile",
