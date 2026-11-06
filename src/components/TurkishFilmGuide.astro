@@ -8,8 +8,23 @@ import {path} from '../site';
   <h3>The Mothers Monster ne demek?</h3>
   <p>Bu bağlamda başlık Türkçeye kabaca “Annenin Canavarı” olarak aktarılabilir. Bu, resmî bir Türkçe dağıtım adı değildir. Film YouTube’da <i>She Gave Birth to a Dragon | The Mothers Monster | Full Fantasy Movie 4K</i> adıyla, MYTHRA tarafından yayımlanır.</p>
   <h3>The Mothers Monster Türkçe dublaj veya altyazılı izlenebilir mi?</h3>
-  <p>Bu sayfa Türkçe bir rehberdir; Türkçe dublaj sunmaz. Yukarıdaki oynatıcıyı yükledikten sonra YouTube ayarlarından mevcut ses ve altyazı seçeneklerine bakın. Türkçe bir seçenek yoksa bu siteden eklenemez. Filmin erişilebilirliği ve dil seçenekleri yayıncıya ve YouTube’a bağlıdır.</p>
+  <p>Bu sayfa Türkçe bir rehberdir; Türkçe dublaj sunmaz. Filmin erişilebilirliği ve dil seçenekleri yayıncıya ve YouTube’a bağlıdır. Türkçe ses veya altyazı bulunduğunu garanti edemeyiz.</p>
+  <h3>YouTube’da dil seçeneklerini nasıl kontrol edebilirim?</h3>
+  <ol>
+    <li>Yukarıdaki oynatıcıyı yükleyin veya videoyu YouTube’da açın. Oynatıcıyı yüklemek YouTube ile bağlantı kurar.</li>
+    <li>Oynatıcının ayarlarını açın. <i>Ses parçası</i> seçeneği varsa, listelenen ses dillerini kontrol edin. Birden fazla ses parçası sunulmayan videolarda bu seçenek bulunmayabilir.</li>
+    <li>Altyazı düğmesi veya altyazı ayarları varsa mevcut dilleri kontrol edin. Türkçe listelenmiyorsa bu sayfa videoya Türkçe bir seçenek ekleyemez. Otomatik altyazı çevirisi sunulursa metinde anlam hataları olabilir; bu seçenek Türkçe seslendirme sağlamaz.</li>
+  </ol>
+  <p>Menülerin yeri cihazınıza göre değişebilir. Ayrıntılar için <a href="https://support.google.com/youtube/answer/13339776?hl=tr" target="_blank" rel="noopener noreferrer">YouTube’un ses dili yardımını</a> ve <a href="https://support.google.com/youtube/topic/9257094?hl=tr" target="_blank" rel="noopener noreferrer">altyazı rehberini</a> inceleyebilirsiniz.</p>
   <h3>Film ile A Monster’s Mother kitabı aynı başlığı mı taşıyor?</h3>
   <p>Hayır. Video <i>The Mothers Monster</i> adını taşır. YH’nin bu sitede tanıtılan romanı ise <i>A Monster’s Mother: A Cradle Made of Embers</i> adındadır. Basılı kitap İngilizcedir. Birinci kitabın tamamını bu sitede Türkçe olarak ücretsiz okuyabilirsiniz.</p>
-  <nav aria-label="Kitabı keşfet"><a href={path('tr/story/')}>Romanın hikâyesi</a> · <a href={path('tr/characters/')}>Elara ve Ember</a> · <a href={path('tr/read/')}>Ücretsiz ilk bölüm (İngilizce)</a></nav>
+  <nav class="film-reader-links" aria-label="Kitabı keşfet">
+    <a href={path('tr/story/')}>Romanın hikâyesi</a>
+    <a href={path('tr/characters/')}>Elara ve Ember</a>
+    <a href={path('tr/read/book/1/')}>Türkçe birinci bölümü oku</a>
+  </nav>
 </section>
+<style>
+  .film-reader-links{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem 1.5rem;margin-top:1.5rem}
+  .film-reader-links a{display:inline-flex;align-items:center;min-height:44px;max-width:100%;padding-block:.5rem;line-height:1.6;overflow-wrap:anywhere}
+</style>
