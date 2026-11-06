@@ -4,7 +4,7 @@ import { VIDEO_EVENT } from '../src/lib/video.ts';
 import { CONSENT_KEY, CONSENT_SECONDS, parseConsent, cleanReferrer, amazonDestination, chapterDestination, initAnalytics } from '../src/lib/analytics.ts';
 
 const stored = (value, offset = CONSENT_SECONDS * 1000) => JSON.stringify({ version: 1, value, expires: Date.now() + offset });
-function fixture({ saved = null, origin = 'https://mothersmonster.com', blocked = false } = {}) {
+function fixture({ saved = null, origin = 'https://mothersmonster.com', blocked = false, pathname = '/fr/read/', language = 'fr' } = {}) {
   class Node {
     hidden = true; textContent = ''; dataset = {}; listeners = {}; attrs = {};
     addEventListener(name, fn) { (this.listeners[name] ||= []).push(fn); }
@@ -20,13 +20,13 @@ function fixture({ saved = null, origin = 'https://mothersmonster.com', blocked 
   const state = { saved, scripts: [], cookies: [], reloads: 0, intervals: [] };
   const doc = new Node();
   doc.referrer = 'https://example.org/private?email=private@example.org#hidden';
-  doc.documentElement = { lang: 'fr' };
+  doc.documentElement = { lang: language };
   doc.visibilityState = 'visible';
   doc.createElement = () => new Node();
   doc.head = { appendChild: s => state.scripts.push(s) };
   Object.defineProperty(doc, 'cookie', { get: () => '_ga=abc; _ga_EX3NWTTVFR=def; important_cookie=keep', set: v => state.cookies.push(v) });
   const win = new Node();
-  win.location = { origin, hostname: new URL(origin).hostname, pathname: '/fr/read/', reload: () => state.reloads++ };
+  win.location = { origin, hostname: new URL(origin).hostname, pathname, reload: () => state.reloads++ };
   win.localStorage = {
     getItem: key => { assert.equal(key, CONSENT_KEY); if (blocked) throw new Error('blocked'); return state.saved; },
     setItem: (key, val) => { assert.equal(key, CONSENT_KEY); if (blocked) throw new Error('blocked'); state.saved = val; },
@@ -37,6 +37,110 @@ function fixture({ saved = null, origin = 'https://mothersmonster.com', blocked 
   initAnalytics(root, win, doc);
   return { root, win, doc, state, elements, click, commands };
 }
+
+function withDelegatedLink(run) {
+  const originalElement = globalThis.Element;
+  globalThis.Element = class {};
+  try {
+    run((f, href, marker = 'chapter_26_end') => {
+      const target = new globalThis.Element();
+      target.closest = selector => {
+        assert.equal(selector, 'a[href]');
+        return { href, dataset: marker === null ? {} : { paperbackDetails: marker } };
+      };
+      f.doc.emit('click', { target, preventDefault: () => assert.fail('Analytics must leave navigation available') });
+    });
+  } finally {
+    if (originalElement === undefined) delete globalThis.Element;
+    else globalThis.Element = originalElement;
+  }
+}
+
+for (const language of ['en', 'fr', 'tr', 'ar']) {
+  test(`paperback details in ${language} require consent and send one canonical event per activation`, () => {
+    withDelegatedLink(activate => {
+      const prefix = language === 'en' ? '' : `/${language}`;
+      const pathname = `${prefix}/read/book/26/`;
+      const destination = `https://mothersmonster.com${prefix}/story/`;
+      const fragment = language === 'en' ? 'paperback-details' : 'localized-book-details';
+      const href = `${destination}?email=private@example.com#${fragment}`;
+      const f = fixture({ pathname, language });
+      f.win.location.search = '?email=private@example.com';
+      f.win.location.hash = '#private-reader-position';
+      activate(f, href);
+      assert.equal(f.commands().length, 0);
+      f.click('[data-privacy-reject]');
+      activate(f, href);
+      assert.equal(f.commands().length, 0);
+      f.click('[data-privacy-accept]');
+      const expected = ['event', 'paperback_details_click', {
+        send_to: 'G-EX3NWTTVFR', placement: 'chapter_26_end', chapter_number: 26,
+        language, page_location: `https://mothersmonster.com${pathname}`, link_url: destination,
+      }];
+      const before = f.commands().length;
+      activate(f, href);
+      assert.deepEqual(f.commands().slice(before), [expected]);
+      activate(f, href);
+      assert.deepEqual(f.commands().slice(before), [expected, expected]);
+      f.click('[data-privacy-reject]');
+      const withdrawn = f.commands().length;
+      activate(f, href);
+      assert.equal(f.commands().length, withdrawn);
+    });
+  });
+}
+
+test('paperback details reject malformed destinations, other locales and non-final chapter routes', () => {
+  withDelegatedLink(activate => {
+    const f = fixture({ saved: stored('granted'), pathname: '/fr/read/book/26/' });
+    const before = f.commands().length;
+    for (const href of [
+      'https://mothersmonster.com/story/#paperback-details',
+      'https://mothersmonster.com/tr/story/#localized-book-details',
+      'https://mothersmonster.com/fr/story',
+      'https://mothersmonster.com/fr/story/private/',
+      'https://mothersmonster.com.evil.test/fr/story/',
+      'https://other.example/fr/story/',
+      'http://mothersmonster.com/fr/story/',
+      'https://person:secret@mothersmonster.com/fr/story/',
+      'https://mothersmonster.com:444/fr/story/',
+      'mailto:private@example.com', 'not a URL',
+      'https://amazon.com/dp/B0HKYDF7BY',
+      'https://mothersmonster.com/fr/read/book/26/',
+    ]) activate(f, href);
+    assert.equal(f.commands().length, before);
+    for (const pathname of [
+      '/fr/read/book/25/', '/fr/read/book/026/', '/fr/read/book/26',
+      '/fr/read/book/26/extra/', '/private/fr/read/book/26/', '/en/read/book/26/',
+      '/fr/read/', '/fr/story/',
+    ]) {
+      f.win.location.pathname = pathname;
+      activate(f, 'https://mothersmonster.com/fr/story/#localized-book-details');
+    }
+    assert.equal(f.commands().length, before);
+    f.win.location.pathname = '/fr/read/book/26/';
+    f.win.location.origin = 'http://localhost:4321';
+    activate(f, 'https://mothersmonster.com/fr/story/#localized-book-details');
+    assert.equal(f.commands().length, before);
+  });
+});
+
+test('only the dedicated paperback marker measures details; existing unmarked senders retain their events', () => {
+  withDelegatedLink(activate => {
+    const f = fixture({ saved: stored('granted'), pathname: '/read/book/26/', language: 'en' });
+    const before = f.commands().length;
+    activate(f, 'https://mothersmonster.com/story/#paperback-details', null);
+    activate(f, 'https://mothersmonster.com/story/#paperback-details', 'chapter_25_end');
+    assert.equal(f.commands().length, before);
+    f.win.location.pathname = '/story/';
+    activate(f, 'https://amazon.com/dp/B0HKYDF7BY?ref=card', null);
+    activate(f, 'https://mothersmonster.com/read/book/25/?private=x#paragraph', null);
+    assert.deepEqual(f.commands().slice(before).map(command => [command[1], command[2].link_url]), [
+      ['amazon_click', 'https://amazon.com/dp/B0HKYDF7BY'],
+      ['chapter_click', 'https://mothersmonster.com/read/book/25/'],
+    ]);
+  });
+});
 
 test('video signals need consent; fields are allowlisted and withdrawal stops collection', () => {
   const f=fixture();

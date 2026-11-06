@@ -166,6 +166,23 @@ export function initAnalytics(root: HTMLElement, win: AnalyticsWindow = window, 
     if (!(target instanceof Element)) return;
     const anchor = target.closest<HTMLAnchorElement>('a[href]');
     if (!anchor) return;
+    if (anchor.dataset?.paperbackDetails === 'chapter_26_end') {
+      // This card belongs only to the final chapter and its localized details.
+      // Never let a malformed card link fall through to another click sender.
+      const route = win.location.pathname.match(/^\/(?:(fr|tr|ar)\/)?read\/book\/26\/$/);
+      if (!route || origin !== 'https://mothersmonster.com' || win.location.origin !== origin) return;
+      const language = route[1] || 'en';
+      const path = `${route[1] ? `/${route[1]}` : ''}/story/`;
+      try {
+        const url = new URL(anchor.href);
+        if (url.protocol !== 'https:' || url.origin !== origin || url.username || url.password || url.pathname !== path) return;
+        win.gtag?.('event', 'paperback_details_click', {
+          send_to: id, placement: 'chapter_26_end', chapter_number: 26,
+          language, page_location: origin + win.location.pathname, link_url: origin + path,
+        });
+      } catch { /* Only the fixed public details destination is measurable. */ }
+      return;
+    }
     if (anchor.href === `https://www.youtube.com/watch?v=${VIDEO_ID}`) win.gtag?.('event', 'youtube_click', {
       send_to: id, link_url: `https://www.youtube.com/watch?v=${VIDEO_ID}`,
       language: doc.documentElement.lang, page_location: origin + win.location.pathname,

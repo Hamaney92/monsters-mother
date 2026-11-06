@@ -1,0 +1,42 @@
+---
+import {getCollection} from 'astro:content';
+import ArtImage from './ArtImage.astro';
+import type {ReadingLanguage} from '../data/reader';
+import {routeFor} from '../data/i18n';
+import {path} from '../site';
+interface Props {language:ReadingLanguage}
+const {language}=Astro.props;
+const books=(await getCollection('books',({data})=>data.published)).sort((a,b)=>a.data.order-b.data.order);
+const book=books[0];
+if(!book?.data.paperback) throw new Error('Missing paperback data for the final chapter offer');
+const pages=new Intl.NumberFormat(language==='ar'?'ar-u-nu-arab':language).format(book.data.paperback.pages);
+const copy={
+  en:{title:'The English paperback',text:`${pages} pages with black-and-white illustrations. The paperback is a paid edition. The full book is free to read here.`,cta:'See paperback details'},
+  fr:{title:'L’édition brochée en anglais',text:`${pages} pages et des illustrations en noir et blanc. Le broché est payant. Vous pouvez lire le roman en entier gratuitement sur ce site.`,cta:'Voir les détails du broché'},
+  tr:{title:'İngilizce karton kapaklı baskı',text:`${pages} sayfa, siyah-beyaz iç çizimler. Basılı baskı ücretlidir. Kitabın tamamını burada ücretsiz okuyabilirsiniz.`,cta:'Baskı ayrıntılarına bak'},
+  ar:{title:'الطبعة الورقية باللغة الإنجليزية',text:`${pages} صفحة مع رسوم داخلية بالأبيض والأسود. هذه الطبعة الورقية مدفوعة. يمكنك قراءة الرواية كاملة هنا مجانًا.`,cta:'اطّلع على تفاصيل الطبعة الورقية'}
+}[language];
+const details=path(routeFor(language,'story'))+(language==='en'?'#paperback-details':'#localized-book-details');
+---
+<aside class="reader-paperback-offer" aria-labelledby="reader-paperback-heading" lang={language} dir={language==='ar'?'rtl':'ltr'}>
+  <div>
+    <p class="product-name" lang="en"><bdi dir="ltr">{book.data.title} · {book.data.author}</bdi></p>
+    <h2 id="reader-paperback-heading">{copy.title}</h2>
+    <p>{copy.text}</p>
+    <a class="offer-cta" href={details} data-paperback-details="chapter_26_end">{copy.cta}</a>
+  </div>
+  <div class="offer-art"><ArtImage src="cover-art.webp" alt="" loading="lazy" sizes="128px"/></div>
+</aside>
+<style>
+  .reader-paperback-offer{display:grid;grid-template-columns:minmax(0,1fr) minmax(5.5rem,8rem);align-items:start;gap:1.15rem;margin-block-start:1.35rem;padding:1.25rem;background:var(--panel);border:1px solid var(--line);border-radius:.6rem;overflow-wrap:anywhere;text-align:start}
+  .reader-paperback-offer h2{margin:.35rem 0 0;font:600 1.65rem/1.2 Georgia,serif}
+  .reader-paperback-offer[lang=ar] h2{font-family:Tahoma,Arial,sans-serif;line-height:1.4}
+  .reader-paperback-offer p{margin:.5rem 0;color:var(--ivory);line-height:1.55}
+  .reader-paperback-offer .product-name{margin:0;color:var(--copper);font-size:.875rem;unicode-bidi:isolate}
+  .offer-cta{display:inline-flex;min-block-size:44px;min-inline-size:44px;align-items:center;justify-content:center;max-inline-size:100%;text-align:center;padding:.5rem .85rem;margin-block-start:.45rem;border-radius:.3rem;background:var(--copper);color:var(--bg);font-weight:700;line-height:1.55;text-decoration:none}
+  .offer-cta:hover{text-decoration:underline;text-underline-offset:.2em}
+  .offer-cta:focus-visible{outline:2px solid var(--copper);outline-offset:4px}
+  .offer-art{inline-size:100%;max-inline-size:8rem}
+  .offer-art :global(img){display:block;inline-size:100%;block-size:auto;border-radius:.2rem}
+  @media(max-width:29rem){.reader-paperback-offer{grid-template-columns:minmax(0,1fr);gap:.85rem}.offer-art{max-inline-size:5.5rem;grid-row:1}}
+</style>
