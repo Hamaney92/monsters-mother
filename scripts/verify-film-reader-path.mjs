@@ -5,7 +5,6 @@ const html = fs.readFileSync('dist/movie/index.html', 'utf8');
 const chapter = fs.readFileSync('src/content/chapters/book-one-chapter-one.md', 'utf8')
   .replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n/, '').trim();
 const opening = chapter.split(/\r?\n\s*\r?\n/).slice(0, 3);
-const turkishOpening=JSON.parse(fs.readFileSync('src/data/reading/tr.json','utf8')).chapters[0].paragraphs[0];
 for (const paragraph of opening) assert(html.includes(paragraph), 'Film page must quote the actual chapter opening');
 assert(html.includes('It is an excerpt, not the complete novel.'), 'Keep free excerpt scope clear');
 assert(html.includes('in English, with no sign-up'), 'Keep reading language and access clear');
@@ -22,34 +21,77 @@ for(const route of ['tr/film/','tr/read/book/']) assert(discovery.includes(`href
 for(const disclosure of ['Bu site Türkçe dublaj sağlamaz','26 bölümün tamamıyla Türkçe','basılı kitap İngilizcedir']) assert(discovery.includes(disclosure),`Missing truthful language disclosure: ${disclosure}`);
 for(const file of ['index.html','fr/index.html','ar/index.html','tr/film/index.html','tr/read/index.html']) assert(!fs.readFileSync(`dist/${file}`,'utf8').includes('id="film-or-book"'),`Homepage-only guide must not leak into ${file}`);
 console.log('Verified exact chapter preview, language/access disclosure, reader destinations and Turkish film alternate.');
-for(const [file,read,book,disclosures] of [
-  ['movie/index.html','/read/','/story/',['Read the complete book free in English: 26 chapters, no sign-up. The paperback edition on Amazon is in English.']],
-  ['fr/film/index.html','/fr/read/','/fr/story/',['en anglais','Sans inscription','pas le livre complet']],
-  ['tr/film/index.html','/tr/read/','/tr/story/',['Birinci kitabın tamamını Türkçe ücretsiz okuyabilirsiniz: 26 bölüm, kayıt gerektirmez.','Amazon’daki basılı kitap İngilizcedir.']],
-  ['ar/film/index.html','/ar/read/','/ar/story/',['باللغة الإنجليزية','لا يلزم التسجيل','ليس الكتاب كاملاً']],
-]) {
+const invitationCopy = {
+  en: {
+    start: 'Read Book One free',
+    excerpt: 'Read the Chapter One excerpt',
+    about: 'About the illustrated book',
+    caption: 'Opening line in English',
+    disclosures: ['Read the complete book free in English: 26 chapters, no sign-up.', 'The paperback edition on Amazon is in English.']
+  },
+  fr: {
+    start: 'Lire gratuitement le chapitre 1 en français',
+    excerpt: 'Lire l’extrait du chapitre 1 en anglais',
+    about: 'Découvrir le livre illustré',
+    caption: 'Première phrase en français',
+    disclosures: ['Le tome 1 complet est gratuit en français.', 'Les 26 chapitres sont accessibles sans inscription.', 'Le broché vendu sur Amazon est en anglais.']
+  },
+  tr: {
+    start: 'Kitabı Türkçe ücretsiz oku',
+    excerpt: 'İlk bölümü İngilizce oku',
+    about: 'Resimli romanı keşfet',
+    caption: 'Türkçe açılış cümlesi',
+    disclosures: ['Birinci kitabın tamamını Türkçe ücretsiz okuyabilirsiniz: 26 bölüm, kayıt gerektirmez.', 'Amazon’daki basılı kitap İngilizcedir.']
+  },
+  ar: {
+    start: 'اقرأ الفصل الأول مجانًا بالعربية',
+    excerpt: 'اقرأ مقتطف الفصل الأول بالإنجليزية',
+    about: 'اكتشف الرواية المصوّرة',
+    caption: 'الجملة الافتتاحية بالعربية',
+    disclosures: ['يمكنك قراءة الكتاب الأول كاملًا بالعربية مجانًا.', 'جميع فصوله الستة والعشرين متاحة دون تسجيل.', 'النسخة الورقية المباعة على Amazon باللغة الإنجليزية.']
+  }
+};
+const escape = text => text.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll("'", '&#39;').replaceAll('"', '&quot;');
+const attr = (attrs, name) => attrs.match(new RegExp(`(?:^|\\s)${name}="([^"]*)"`))?.[1];
+for (const [lang, copy] of Object.entries(invitationCopy)) {
+  const prefix = lang === 'en' ? '' : `/${lang}`;
+  const file = lang === 'en' ? 'movie/index.html' : `${lang}/film/index.html`;
+  const read = `${prefix}/read/`;
+  const chapterHref = `${read}book/1/`;
+  const book = `${prefix}/story/`;
+  const direction = lang === 'ar' ? 'rtl' : 'ltr';
+  const arrow = lang === 'ar' ? '←' : '→';
+  const localChapter = JSON.parse(fs.readFileSync(`src/data/reading/${lang}.json`, 'utf8')).chapters[0];
   const film=fs.readFileSync(`dist/${file}`,'utf8');
   const invitation=film.match(/<section class="film-book-invitation"[^>]*>([\s\S]*?)<\/section>/);
   assert(invitation,`Missing early reader invitation on ${file}`);
   assert.equal((film.match(/id="film-reader-invitation"/g)||[]).length,1);
-  if(file==='tr/film/index.html') {
-    assert(invitation[1].includes(turkishOpening),'Use the actual Turkish opening paragraph');
-    assert(/<blockquote[^>]*lang="tr"[^>]*dir="ltr"[^>]*cite="\/tr\/read\/book\/1\/"/.test(invitation[1]),'Mark and cite the Turkish chapter preview');
-    assert(/<a\b[^>]*class="button"[^>]*href="\/tr\/read\/book\/1\/"[^>]*>Kitabı Türkçe ücretsiz oku →<\/a>/.test(invitation[1]),'Begin the complete Turkish book directly');
-    assert(invitation[1].includes('İlk bölümü İngilizce oku'),'Keep the English excerpt option explicit');
-    assert(!invitation[1].includes('kitabın tamamı değildir'),'Do not describe the complete Turkish book as an incomplete excerpt');
-    assert(fs.existsSync('dist/tr/read/book/1/index.html'),'The Turkish chapter destination must exist');
-  } else {
-    assert(invitation[1].includes(opening[0]),'Use the actual opening paragraph, not a fabricated teaser');
-    assert(/<blockquote[^>]*lang="en"[^>]*dir="ltr"/.test(invitation[1]),'Mark the excerpt as English even on RTL pages');
-    if(file==='movie/index.html') {
-      assert(/<a\b[^>]*class="button"[^>]*href="\/read\/book\/1\/"[^>]*>Read Book One free →<\/a>/.test(invitation[1]),'Begin the complete English book directly');
-      assert(/<a\b[^>]*class="text-link"[^>]*href="\/read\/"[^>]*>Read the Chapter One excerpt →<\/a>/.test(invitation[1]),'Keep the Chapter One excerpt as a distinct secondary option');
-      assert(fs.existsSync('dist/read/book/1/index.html'),'The English chapter destination must exist');
-    }
-  }
-  for(const disclosure of disclosures) assert(invitation[1].includes(disclosure),`Missing invitation disclosure on ${file}: ${disclosure}`);
-  for(const href of [read,book]) assert(invitation[1].includes(`href="${href}"`),`Missing localized invitation destination: ${href}`);
+  const quote = invitation[1].match(/<blockquote\b([^>]*)>([\s\S]*?)<\/blockquote>/);
+  assert(quote, `${lang}: opening quote missing`);
+  assert.equal(quote[2].trim(), escape(lang === 'en' ? opening[0] : localChapter.paragraphs[0]), `${lang}: exact published opening quote`);
+  assert.equal(attr(quote[1], 'lang'), lang, `${lang}: quote language`);
+  assert.equal(attr(quote[1], 'dir'), direction, `${lang}: quote direction`);
+  assert.equal(attr(quote[1], 'cite'), lang === 'en' ? read : chapterHref, `${lang}: quote source`);
+
+  const caption = invitation[1].match(/<p class="invitation-caption"[^>]*>([^<]*)<\/p>/)?.[1];
+  assert.equal(caption?.trim(), escape(`${localChapter.title} · ${copy.caption}`), `${lang}: localized quote caption`);
+  const note = invitation[1].match(/<p class="invitation-note"[^>]*>([^<]*)<\/p>/)?.[1];
+  for (const disclosure of copy.disclosures) assert(note?.includes(escape(disclosure)), `${lang}: missing disclosure: ${disclosure}`);
+
+  const links = [...invitation[1].matchAll(/<a\b([^>]*)>([^<]*)<\/a>/g)]
+    .map(([, attrs, label]) => [attr(attrs, 'class'), attr(attrs, 'href'), label.trim()]);
+  assert.deepEqual(links, [
+    ['button', chapterHref, escape(`${copy.start} ${arrow}`)],
+    ['text-link', read, escape(`${copy.excerpt} ${arrow}`)],
+    ['text-link', book, escape(`${copy.about} ${arrow}`)]
+  ], `${lang}: local chapter first, distinct English excerpt second, book information third`);
+  const chapterPage = fs.readFileSync(`dist${chapterHref}index.html`, 'utf8');
+  const chapterReader = chapterPage.match(/<section\b([^>]*\bdata-book-reader\b[^>]*)>/)?.[1];
+  assert(chapterReader, `${lang}: destination must be the full reader`);
+  assert.equal(attr(chapterReader, 'data-language'), lang, `${lang}: destination language`);
+  assert.equal(attr(chapterReader, 'data-chapter'), '1', `${lang}: destination chapter`);
+  assert(fs.readFileSync(`dist${read}index.html`, 'utf8').includes(escape(opening[0])), `${lang}: secondary destination must show the English excerpt`);
+  assert(fs.existsSync(`dist${book}index.html`), `${lang}: book information destination must exist`);
   const playerPosition=film.indexOf('data-video-player');
   assert(playerPosition>=0 && film.indexOf(invitation[0])>playerPosition,'Keep the film player before the book invitation');
   assert(!/<iframe\b/.test(film),'Do not auto-load YouTube');
