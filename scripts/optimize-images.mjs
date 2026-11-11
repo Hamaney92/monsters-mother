@@ -19,9 +19,10 @@ for (const file of sourceFiles.filter(name => !selectedFiles.length || selectedF
   for (const w of widths) {
     const entry = {width:w};
     for (const format of ['avif','webp']) {
-      // The source and desktop master remain unchanged. The small cover
-      // variants use visually reviewed compression; preserve other settings.
-      const quality = format==='avif' ? (file==='cover-art.webp' && w<=768 ? 50 : 58) : 80;
+      let quality = format === 'avif' ? 58 : 80;
+      if (format === 'avif' && file === 'cover-art.webp' && w <= 768) {
+        quality = w === 768 ? 43 : 50;
+      }
       const buffer = await sharp(input).resize({width:w,withoutEnlargement:true})[format]({quality,effort:4}).toBuffer();
       const hash = createHash('sha256').update(buffer).digest('hex').slice(0,10);
       const name = `${path.parse(file).name}-${w}-${hash}.${format}`;
