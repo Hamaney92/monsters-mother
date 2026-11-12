@@ -83,6 +83,14 @@ for (const [lang,detailsTitle,englishLabel,freeQuestion] of [
   for(const value of [detailsTitle,englishLabel,freeQuestion,book.isbn,String(book.numberOfPages)]) assert(guide.includes(value),`Missing localized book evidence in ${lang}: ${value}`);
   assert.equal((guide.match(/<h3\b/g)||[]).length,4,`Four reader answers required in ${lang}`);
   assert(guide.includes('loading="lazy"') && guide.includes('width="1080" height="1620"'),`Actual responsive full-page preview required in ${lang}`);
-  for(const route of ['read','film','characters']) assert(guide.includes(`href="/${lang}/${route}/"`),`Missing localized route ${lang}/${route}`);
+  const firstChapter = `/${lang}/read/book/1/`;
+  for(const route of [firstChapter,`/${lang}/film/`,`/${lang}/characters/`]) assert(guide.includes(`href="${route}"`),`Missing localized route ${route}`);
+  const story = translated.match(/<article class="prose"[^>]*>([\s\S]*?)<\/article>/)?.[1];
+  assert(story,`Missing story introduction: ${lang}`);
+  const lead = story.split('<picture')[0];
+  assert(lead.includes(`href="${firstChapter}"`),`Lead must open the localized chapter before the illustration: ${lang}`);
+  assert(!story.includes(`href="/${lang}/read/"`),`Story must not direct readers to the English excerpt: ${lang}`);
+  const target = fs.readFileSync(`dist${firstChapter}index.html`,'utf8');
+  assert.match(target,new RegExp(`data-language="${lang}"[^>]*data-chapter="1"`),`Destination must be chapter 1 in ${lang}`);
 }
 console.log('Verified French, Turkish and Arabic paperback details, language disclosure, four reader answers and real interior previews.');

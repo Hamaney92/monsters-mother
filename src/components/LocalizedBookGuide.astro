@@ -3,6 +3,8 @@ import { getCollection } from 'astro:content';
 import ArtImage from './ArtImage.astro';
 import { path } from '../site';
 import { routeFor } from '../data/i18n';
+import { readingRoute } from '../data/reader';
+import { localizedStoryPreview } from '../data/localizedStoryPreview';
 const { lang } = Astro.props;
 const books = (await getCollection('books', ({data}) => data.published)).sort((a,b) => a.data.order-b.data.order);
 const book = books[0];
@@ -16,7 +18,7 @@ const translations = {
       ['Le roman contient-il des illustrations ?', 'Oui. Le broché contient des dessins en noir et blanc qui accompagnent le récit. Les images en couleur du site présentent les personnages et l’atmosphère : ce ne sont pas les pages imprimées à l’intérieur.'],
       ['The Mothers Monster et A Monster’s Mother sont-ils le même titre ?', 'The Mothers Monster, également présenté sous le titre She Gave Birth to a Dragon, est le titre de la vidéo. A Monster’s Mother: A Cradle Made of Embers est le roman de YH présenté sur ce site. Le guide du film permet de retrouver la vidéo et sa source.']
     ],
-    caption:'Aperçu réel du broché : page 8, chapitre 2, « Back Through the Snow ».', alt:'Page intérieure en noir et blanc : Elara porte le dragon nouveau-né près d’une grotte enneigée ; numéro de page 8.', print:'Cet aperçu numérique montre une page entière de l’édition anglaise, avec ses marges. Le contraste sur papier peut différer de celui d’un écran.', navigation:'Pour continuer', read:'Lire le chapitre 1 (anglais)', film:'Le film et sa source', characters:'Rencontrer Elara et Ember'
+    caption:'Aperçu réel du broché : page 8, chapitre 2, « Back Through the Snow ».', alt:'Page intérieure en noir et blanc : Elara porte le dragon nouveau-né près d’une grotte enneigée ; numéro de page 8.', print:'Cet aperçu numérique montre une page entière de l’édition anglaise, avec ses marges. Le contraste sur papier peut différer de celui d’un écran.', navigation:'Pour continuer', film:'Le film et sa source', characters:'Rencontrer Elara et Ember'
   },
   tr: {
     details:'Basılı kitap bilgileri', author:'Yazar', language:'Kitabın dili', english:'İngilizce', format:'Biçim', paperback:'Karton kapak · siyah-beyaz iç çizimler', length:'Sayfa sayısı', pages:'sayfa', listing:'Güncel fiyatı ve ülkenize teslimat seçeneklerini Amazon’da kontrol edin.',
@@ -27,7 +29,7 @@ const translations = {
       ['Kitapta çizimler var mı?', 'Evet. Basılı kitabın içinde hikâyeye eşlik eden siyah-beyaz çizimler bulunur. Sitedeki renkli görseller karakterleri ve atmosferi tanıtır; kitabın içindeki basılı sayfalar değildir.'],
       ['The Mothers Monster ile A Monster’s Mother aynı başlık mı?', 'The Mothers Monster, She Gave Birth to a Dragon adıyla da sunulan videonun başlığıdır. A Monster’s Mother: A Cradle Made of Embers ise bu sitede tanıtılan YH romanıdır. Film rehberinden videoya ve kaynağına ulaşabilirsiniz.']
     ],
-    caption:'Basılı kitaptan gerçek bir önizleme: sayfa 8, ikinci bölüm, “Back Through the Snow”.', alt:'Siyah-beyaz iç sayfa: Elara karlı bir mağaranın yanında yeni doğmuş ejderhayı tutuyor; sayfa numarası 8.', print:'Bu dijital önizleme, İngilizce baskıdan kenar boşluklarıyla birlikte tam bir sayfa gösterir. Basılı kâğıdın kontrastı ekrandakinden farklı olabilir.', navigation:'Keşfetmeye devam edin', read:'İlk bölümü oku (İngilizce)', film:'Film ve kaynağı', characters:'Elara ve Ember’ı tanıyın'
+    caption:'Basılı kitaptan gerçek bir önizleme: sayfa 8, ikinci bölüm, “Back Through the Snow”.', alt:'Siyah-beyaz iç sayfa: Elara karlı bir mağaranın yanında yeni doğmuş ejderhayı tutuyor; sayfa numarası 8.', print:'Bu dijital önizleme, İngilizce baskıdan kenar boşluklarıyla birlikte tam bir sayfa gösterir. Basılı kâğıdın kontrastı ekrandakinden farklı olabilir.', navigation:'Keşfetmeye devam edin', film:'Film ve kaynağı', characters:'Elara ve Ember’ı tanıyın'
   },
   ar: {
     details:'تفاصيل النسخة الورقية', author:'الكاتب', language:'لغة الكتاب', english:'الإنجليزية', format:'النوع', paperback:'غلاف ورقي · رسوم داخلية بالأبيض والأسود', length:'عدد الصفحات', pages:'صفحة', listing:'راجع صفحة Amazon لمعرفة السعر الحالي وخيارات التوصيل إلى بلدك.',
@@ -38,7 +40,7 @@ const translations = {
       ['هل يحتوي الكتاب على رسوم؟', 'نعم. ترافق القصة في النسخة الورقية رسوم بالأبيض والأسود. أما الصور الملونة على الموقع فتقدم الشخصيات وأجواء الرواية؛ وهي ليست الصفحات المطبوعة داخل الكتاب.'],
       ['هل The Mothers Monster وA Monster’s Mother هما العنوان نفسه؟', 'The Mothers Monster، المعروف أيضًا بعنوان She Gave Birth to a Dragon، هو عنوان الفيديو. أما A Monster’s Mother: A Cradle Made of Embers فهي رواية YH المقدمة على هذا الموقع. يتيح دليل الفيلم الوصول إلى الفيديو ومصدره.']
     ],
-    caption:'معاينة فعلية للنسخة الورقية: الصفحة 8 من الفصل الثاني، «Back Through the Snow».', alt:'صفحة داخلية بالأبيض والأسود تظهر إلارا تحمل التنين حديث الولادة قرب كهف ثلجي، مع رقم الصفحة 8.', print:'تعرض هذه المعاينة الرقمية صفحة كاملة من النسخة الإنجليزية، بما فيها الهوامش. قد يختلف التباين على الورق عن ظهوره على الشاشة.', navigation:'تابع اكتشاف القصة', read:'اقرأ الفصل الأول بالإنجليزية', film:'الفيلم ومصدره', characters:'تعرف إلى إلارا وإمبر'
+    caption:'معاينة فعلية للنسخة الورقية: الصفحة 8 من الفصل الثاني، «Back Through the Snow».', alt:'صفحة داخلية بالأبيض والأسود تظهر إلارا تحمل التنين حديث الولادة قرب كهف ثلجي، مع رقم الصفحة 8.', print:'تعرض هذه المعاينة الرقمية صفحة كاملة من النسخة الإنجليزية، بما فيها الهوامش. قد يختلف التباين على الورق عن ظهوره على الشاشة.', navigation:'تابع اكتشاف القصة', film:'الفيلم ومصدره', characters:'تعرف إلى إلارا وإمبر'
   }
 };
 const t = translations[lang as keyof typeof translations];
@@ -62,7 +64,7 @@ const local = (route:string) => path(routeFor(lang, route));
     <figcaption>{t.caption}</figcaption>
   </figure>
   <p>{t.print}</p>
-  <nav aria-label={t.navigation}><a href={local('read')}>{t.read}</a> · <a href={local('movie')}>{t.film}</a> · <a href={local('characters')}>{t.characters}</a></nav>
+  <nav aria-label={t.navigation}><a href={path(readingRoute(lang, 1))}>{localizedStoryPreview[lang as keyof typeof localizedStoryPreview].start}</a> · <a href={local('movie')}>{t.film}</a> · <a href={local('characters')}>{t.characters}</a></nav>
 </section>
 <style>
   .localized-book-guide{margin-top:3rem;padding-top:2rem;border-top:1px solid var(--line)}
