@@ -86,3 +86,20 @@ for(const [id,expected] of Object.entries(expectedReadingPaths)) {
   for(const target of routes) assert(fs.existsSync(`dist/blog/${target}/index.html`),'Recommend only a published page');
 }
 console.log('Verified four topic-specific reading paths with two distinct published essays each.');
+
+for (const language of ['tr', 'fr', 'ar']) {
+  const essayPath = `dist/${language}/blog/she-gave-birth-to-a-dragon/index.html`;
+  const essay = fs.readFileSync(essayPath, 'utf8');
+  const body = essay.match(/<div class="prose"[^>]*>([\s\S]*?)<\/div>\s*<\/article>/)?.[1];
+  assert(body, `Missing localized dragon essay: ${language}`);
+  assert(body.includes(`href="/${language}/film/"`), `Missing distinct film guide: ${language}`);
+  assert(!body.includes(`href="/${language}/read/"`), `Essay still directs to the English excerpt: ${language}`);
+
+  for (const chapterNumber of [1, 2]) {
+    const chapterPath = `/${language}/read/book/${chapterNumber}/`;
+    assert(body.includes(`href="${chapterPath}"`), `Missing localized link to ${chapterPath}`);
+    const destination = fs.readFileSync(`dist${chapterPath}index.html`, 'utf8');
+    assert.match(destination, new RegExp(`data-language="${language}"[^>]*data-chapter="${chapterNumber}"`));
+  }
+}
+console.log('Verified the film guide and two localized chapter links in the dragon essay.');
