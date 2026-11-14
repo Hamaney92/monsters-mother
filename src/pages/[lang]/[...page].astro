@@ -86,7 +86,21 @@ const chapter=page==='read'?await getEntry('chapters','book-one-chapter-one'):un
     </>}
   </div>
 </article>}
-{page==='film' && <article class="prose localized-watch"><VideoPlayer lang={lang}/><FilmBookInvitation lang={lang}/>{lang==='tr' ? <TurkishFilmGuide/> : <><h2>{t.filmTitle}</h2><p>{t.filmIntro}</p><p>{t.filmLang}</p><h2 dir="ltr">A Monster’s Mother</h2><p>{t.filmDistinction}</p><a class="text-link" href={local('read')}>{u.read} →</a></>}</article>}
+{page==='film' && <article class="prose localized-watch">
+  {lang==='tr' && (
+    <p id="film-language-note" style="margin:0 0 1rem;font-size:.92rem;line-height:1.6">
+      Bu rehber Türkçe. Film için bu sitede Türkçe dublaj sunulmuyor.{' '}
+      <a href="#film-language-help">YouTube’da ses ve altyazı seçeneklerini kontrol edin.</a>
+    </p>
+  )}
+  <VideoPlayer lang={lang}/>
+  <FilmBookInvitation lang={lang}/>
+  {lang==='tr' ? <TurkishFilmGuide/> : <>
+    <h2>{t.filmTitle}</h2><p>{t.filmIntro}</p><p>{t.filmLang}</p>
+    <h2 dir="ltr">A Monster’s Mother</h2><p>{t.filmDistinction}</p>
+    <a class="text-link" href={local('read')}>{u.read} →</a>
+  </>}
+</article>}
 {page==='read' && <><ReadingTools lang={lang}/><article class="prose"><p>{t.readIntro}</p><div lang="en" dir="ltr" data-reading-content><h2>The First Breath</h2>{Chapter && <Chapter/>}</div><div class="actions"><a class="text-link" href={local('characters')}>{t.charactersTitle} →</a><a class="text-link" href={local('world')}>{t.worldTitle} →</a></div></article></>}
 {!(lang==='tr' && page==='film') && <section class="book-band"><p>{t.note}</p><a class="button" href="https://www.amazon.com/dp/B0HKYDF7BY" target="_blank" rel="noopener noreferrer">{u.buy} · Amazon ↗</a></section>}
 </Layout>
