@@ -21,11 +21,11 @@ const diagrams={
     {book.translation==='assisted' && <details class="translation-disclosure"><summary>{t.translationLabel}</summary><p class="translation-note">{t.translation} <a href={path(readingRoute('en',chapterNumber))} lang="en">{t.original} →</a></p></details>}
     <p class="translation-note">{t.paper}</p>
   </header>
-  <div class="reader-preferences">
-    <label><input type="checkbox" data-remember-reading/> {t.remember}</label>
-    <a data-resume-reading hidden>{t.resume} →</a>
-  </div>
   {!chapter ? <>
+    <div class="reader-preferences">
+      <label class="reader-remember"><input type="checkbox" data-remember-reading/> {t.remember}</label>
+      <a data-resume-reading hidden>{t.resume} →</a>
+    </div>
     <p>{t.note}</p>
     <a class="button" href={path(readingRoute(book.language,1))}>{t.begin} →</a>
     <nav class="chapter-contents" aria-label={t.contents}>
@@ -37,7 +37,18 @@ const diagrams={
       <a href={path(readingRoute(book.language))}>☰ {t.contents}</a>
       <span>{t.chapter} <bdi dir="ltr">{format(chapter.number)} / {format(book.chapters.length)}</bdi></span>
     </nav>
-    <div class="reader-options"><span>{t.size}</span><button type="button" data-reader-size="smaller" aria-label={t.small}>A−</button><button type="button" data-reader-size="larger" aria-label={t.large}>A+</button></div>
+    <div class="chapter-controls">
+      <details class="chapter-settings">
+        <summary>{t.settings}</summary>
+        <label class="reader-remember"><input type="checkbox" data-remember-reading/> {t.remember}</label>
+        <div class="reader-options">
+          <span>{t.size}</span>
+          <button type="button" data-reader-size="smaller" aria-label={t.small}>A−</button>
+          <button type="button" data-reader-size="larger" aria-label={t.large}>A+</button>
+        </div>
+      </details>
+      <a class="chapter-resume" data-resume-reading hidden>{t.resume} →</a>
+    </div>
     <progress data-reader-progress max="100" value="0" aria-label={t.progress}></progress>
     <article class="chapter-text" data-chapter-text lang={book.language} dir={book.language==='ar'?'rtl':'ltr'}>
       <h2>{chapter.title}</h2>
@@ -63,11 +74,18 @@ document.querySelectorAll<HTMLElement>('[data-book-reader]').forEach(initBookRea
 .book-reader[data-language=ar] .reader-heading .eyebrow{letter-spacing:0;font-size:.8rem;text-transform:none}
 .reader-heading{text-align:center;margin-bottom:28px}.reader-heading h1{font-size:clamp(2.5rem,6vw,4.5rem);line-height:1.1}.reader-heading .eyebrow{margin-bottom:14px;line-height:1.8}
 .reader-heading.compact h1{font-size:2.3rem;margin-block:10px}.reader-heading.compact .reader-subtitle{font-size:1rem;margin-block:10px}.reader-heading.compact .eyebrow{font-size:.65rem;margin-block:0}.translation-disclosure{font-size:.82rem;line-height:1.7;max-width:680px;margin:12px auto}.translation-disclosure summary{cursor:pointer;text-decoration:underline;text-underline-offset:3px}.reader-subtitle{font-family:Georgia,serif;font-size:1.3rem;color:var(--copper);margin:14px 0 20px}.translation-note{font-size:.85rem;line-height:1.7;max-width:680px;margin:10px auto}.translation-note a{text-decoration:underline}
-.reader-preferences{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding-block:16px;border-block:1px solid var(--line);margin-bottom:24px;font-size:.9rem}.reader-preferences label{display:flex;align-items:center;gap:9px;min-height:44px}.reader-preferences input{width:20px;height:20px;accent-color:var(--copper)}.reader-preferences a{text-decoration:underline}.reader-preferences [hidden]{display:none}
+.reader-preferences{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding-block:16px;border-block:1px solid var(--line);margin-bottom:24px;font-size:.9rem}.reader-preferences a{text-decoration:underline}.reader-preferences [hidden]{display:none}
+.reader-remember{display:flex;align-items:center;gap:9px;min-height:44px}
+.reader-remember input{flex:none;width:20px;height:20px;accent-color:var(--copper)}
 .chapter-contents h2{font-size:2.4rem;margin-top:40px}.chapter-contents ol{list-style:none;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 24px;padding:0}.chapter-contents li{border-bottom:1px solid var(--line)}.chapter-contents a{display:flex;gap:14px;padding:18px 4px;min-height:48px}.chapter-contents span{color:var(--copper);min-width:1.5em;font-variant-numeric:tabular-nums}
 .reader-navigation,.reader-next{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}.reader-navigation{font-size:.9rem;padding:12px 0}.reader-navigation a,.reader-next>a:not(.button){text-decoration:underline}.reader-next{border-top:1px solid var(--line);padding:28px 0 12px;margin-top:35px}
 .reader-final .reader-next>a,.reader-final .reader-feedback>a{display:inline-flex;align-items:center;min-height:44px;max-width:100%;vertical-align:middle}
-.reader-options{display:flex;align-items:center;gap:12px;margin:20px 0;font-size:.9rem}.reader-options button{border:1px solid var(--line);background:var(--panel);color:inherit;min-width:44px;min-height:44px;cursor:pointer}.reader-options button:disabled{opacity:.4}.reader-options button:focus-visible{outline:2px solid var(--copper);outline-offset:3px}progress{display:block;width:100%;height:4px;accent-color:var(--copper)}
+.chapter-controls{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:0 20px;margin-block:0 8px;border-block-start:1px solid var(--line);font-size:.9rem}
+.chapter-settings{min-width:0;max-width:100%}
+.chapter-settings summary{width:fit-content;max-width:100%;min-height:44px;padding-block:10px;line-height:24px;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.chapter-settings summary:focus-visible{outline:2px solid var(--copper);outline-offset:3px}
+.chapter-resume:not([hidden]){display:inline-flex;align-items:center;min-height:44px;text-decoration:underline;text-underline-offset:3px}
+.reader-options{display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin-block:8px 12px}.reader-options button{border:1px solid var(--line);background:var(--panel);color:inherit;min-width:44px;min-height:44px;cursor:pointer}.reader-options button:disabled{opacity:.4}.reader-options button:focus-visible{outline:2px solid var(--copper);outline-offset:3px}progress{display:block;width:100%;height:4px;accent-color:var(--copper)}
 .chapter-text{max-width:720px;margin:38px auto 0;--reader-scale:1}.chapter-text h2{font-size:2.6rem;line-height:1.2;margin-bottom:30px}.chapter-text p{font-family:Georgia,'Times New Roman',serif;font-size:calc(1.14rem * var(--reader-scale));line-height:1.9;color:#e5dccd;margin:0 0 1.2em;text-align:start}.chapter-text[lang=ar] p{font-family:Tahoma,Arial,sans-serif;line-height:2;font-size:calc(1.2rem * var(--reader-scale))}.chapter-text figure{margin:32px auto;max-width:520px;background:#fff}.chapter-text img{display:block;width:100%;height:auto}.chapter-text hr{width:70px;margin:32px auto;border:0;border-top:1px solid var(--copper)}
 @media(max-width:650px){.book-reader{padding:25px 6% 45px}.chapter-contents ol{grid-template-columns:1fr}.chapter-text{margin-top:28px}.chapter-text h2{font-size:2.2rem}.reader-next .button{white-space:normal}.reader-heading h1{font-size:2.7rem}}
 </style>
