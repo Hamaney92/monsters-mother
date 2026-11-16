@@ -12,7 +12,10 @@ export function initBookReader(root:HTMLElement){
   remember.checked=!!place;
   const showResume=()=>{
     // Only use the validated number; never navigate to a stored free-text URL.
-    if(place){resume.href=base+place.chapter+'/';resume.hidden=false;}else resume.hidden=true;
+    if(place && place.chapter!==chapter){
+      resume.href=base+place.chapter+'/';
+      resume.hidden=false;
+    }else resume.hidden=true;
   };
   const save=()=>{
     try{

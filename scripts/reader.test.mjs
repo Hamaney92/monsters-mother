@@ -104,20 +104,27 @@ test('reader SEO does not count metadata spoofed in comments, scripts or the bod
  assert.throws(()=>verifyReaderSeo(seoHtml.replace(alternate,'').replace('</body>',alternate+'</body>'),seoBook,7),/alternate/);
  assert.doesNotThrow(()=>verifyReaderSeo(seoHtml.replace('</head>','<!-- <meta name="robots" content="noindex"> --></head>'),seoBook,7));
 });
-test('remembering a chapter is opt-in, can be revoked and discards expired storage',()=>{
+test('remembering a chapter is opt-in and only offers useful resume links',()=>{
  const original=globalThis.localStorage;
  const saved=new Map();
  globalThis.localStorage={getItem:key=>saved.get(key)||null,setItem:(key,value)=>saved.set(key,value),removeItem:key=>saved.delete(key)};
- const fixture=()=>{
+ const fixture=(chapter=19)=>{
   const remember={checked:false,listeners:{},addEventListener(name,fn){this.listeners[name]=fn;}};
   const resume={hidden:true,href:''};
-  const root={dataset:{language:'tr',chapter:'19',readingBase:'/tr/read/book/'},querySelector(selector){return selector==='[data-remember-reading]'?remember:selector==='[data-resume-reading]'?resume:null;}};
+  const root={dataset:{language:'tr',chapter:String(chapter),readingBase:'/tr/read/book/'},querySelector(selector){return selector==='[data-remember-reading]'?remember:selector==='[data-resume-reading]'?resume:null;}};
   initBookReader(root);return {remember,resume};
  };
  try{
   const a=fixture();assert.equal(saved.size,0);assert.equal(a.resume.hidden,true);
   a.remember.checked=true;a.remember.listeners.change();
-  assert.equal(JSON.parse(saved.get('mm.reading-place.v1')).chapter,19);assert.equal(a.resume.href,'/tr/read/book/19/');
+  assert.equal(JSON.parse(saved.get('mm.reading-place.v1')).chapter,19);
+  assert.equal(a.resume.hidden,true);
+  const restored=fixture();
+  assert.equal(restored.remember.checked,true);
+  assert.equal(restored.resume.hidden,true);
+  const contents=fixture(0);
+  assert.equal(contents.resume.hidden,false);
+  assert.equal(contents.resume.href,'/tr/read/book/19/');
   a.remember.checked=false;a.remember.listeners.change();assert.equal(saved.size,0);assert.equal(a.resume.hidden,true);
   saved.set('mm.reading-place.v1',JSON.stringify({language:'tr',chapter:19,expires:Date.now()-1}));
   assert.equal(fixture().remember.checked,false);assert.equal(saved.size,0);
