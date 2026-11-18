@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import ArtImage from './ArtImage.astro';
+import KindleOffer from './KindleOffer.astro';
 import { path } from '../site';
 import { routeFor } from '../data/i18n';
 import { readingRoute } from '../data/reader';
@@ -57,6 +58,7 @@ const local = (route:string) => path(routeFor(lang, route));
     <div><dt>ISBN-13</dt><dd dir="ltr">{book.data.paperback.isbn}</dd></div>
   </dl>
   <p><a href={book.data.amazon} target="_blank" rel="noopener noreferrer">{t.listing}</a></p>
+  {book.data.kindle && <KindleOffer language={lang} url={book.data.kindle}/>}
   <h2>{t.guide}</h2>
   {t.questions.map(([question,answer]) => <><h3>{question}</h3><p>{answer}</p></>)}
   <figure class="paperback-preview">

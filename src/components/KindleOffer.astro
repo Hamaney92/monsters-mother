@@ -1,0 +1,53 @@
+---
+import type { ReadingLanguage } from '../data/reader';
+
+interface Props {
+  language: ReadingLanguage;
+  url: string;
+}
+
+const { language, url } = Astro.props;
+const copy = {
+  en: {
+    title: 'The English Kindle edition',
+    description: 'The English ebook is a paid edition. Check the current price and availability on',
+    cta: 'View the English Kindle edition',
+    newTab: 'opens in a new tab'
+  },
+  fr: {
+    title: 'L’édition Kindle en anglais',
+    description: 'Le livre numérique en anglais est payant. Consultez le prix actuel et la disponibilité sur',
+    cta: 'Voir le Kindle en anglais',
+    newTab: 's’ouvre dans un nouvel onglet'
+  },
+  tr: {
+    title: 'İngilizce Kindle baskısı',
+    description: 'İngilizce e-kitap ücretlidir. Güncel fiyatı ve ülkenizdeki kullanılabilirliği kontrol edebileceğiniz site',
+    cta: 'İngilizce Kindle baskısına bak',
+    newTab: 'yeni sekmede açılır'
+  },
+  ar: {
+    title: 'نسخة كيندل باللغة الإنجليزية',
+    description: 'الكتاب الإلكتروني باللغة الإنجليزية مدفوع. تحقق من السعر الحالي والتوفر على',
+    cta: 'عرض نسخة كيندل الإنجليزية',
+    newTab: 'يفتح في علامة تبويب جديدة'
+  }
+}[language];
+---
+<aside class="kindle-offer" aria-labelledby="kindle-edition" lang={language} dir={language === 'ar' ? 'rtl' : 'ltr'}>
+  <h2 id="kindle-edition">{copy.title}</h2>
+  <p>{copy.description} <bdi dir="ltr">Amazon.com</bdi>.</p>
+  <a class="button kindle-cta" href={url} target="_blank" rel="noopener noreferrer">
+    {copy.cta}
+    <span aria-hidden="true">↗</span>
+    <span class="sr-only"> ({copy.newTab})</span>
+  </a>
+</aside>
+<style>
+  .kindle-offer{margin-block:1.5rem;padding:1.25rem;border:1px solid var(--line);background:var(--panel);overflow-wrap:anywhere;text-align:start}
+  .kindle-offer h2{margin:0;font-size:1.8rem;line-height:1.3}
+  .kindle-offer p{margin-block:.75rem 1rem;line-height:1.7}
+  .kindle-cta{min-block-size:44px;max-inline-size:100%;white-space:normal;text-align:center;line-height:1.5;padding:.75rem 1rem}
+  .kindle-cta:focus-visible{outline:2px solid var(--copper);outline-offset:4px}
+  .kindle-offer[lang=ar] h2{font-family:Tahoma,Arial,sans-serif;line-height:1.5}
+</style>

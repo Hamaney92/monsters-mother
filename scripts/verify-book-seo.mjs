@@ -53,6 +53,17 @@ for(const lang of ['en','fr','ar','tr']) {
     const match=html.match(new RegExp(`<nav[^>]*class="${nav}"[^>]*>(.*?)</nav>`,'s'));
     assert(match?.[1].includes(`href="/${prefix}read/book/"`),`Missing chapter link in ${lang} ${nav}`);
   }
+  const editionPage=fs.readFileSync(`dist/${prefix}story/index.html`,'utf8');
+  const kindleOffers=[...editionPage.matchAll(/<aside\b[^>]*class="kindle-offer"[^>]*>[\s\S]*?<\/aside>/g)];
+  assert.equal(kindleOffers.length,1,`One Kindle offer required in ${lang}`);
+  const kindleOffer=kindleOffers[0][0];
+  const kindleLink=kindleOffer.match(/<a\b[^>]*href="https:\/\/www\.amazon\.com\/dp\/B0HQY7DV73"[^>]*>/)?.[0];
+  assert(kindleLink?.includes('target="_blank"') && kindleLink.includes('rel="noopener noreferrer"'),`Verified Kindle listing must open safely in ${lang}`);
+  assert(kindleOffer.includes(`lang="${lang}"`) && kindleOffer.includes(`dir="${lang==='ar'?'rtl':'ltr'}"`),`Kindle offer language and direction in ${lang}`);
+  const kindleLabels={en:'The English Kindle edition',fr:'L’édition Kindle en anglais',tr:'İngilizce Kindle baskısı',ar:'نسخة كيندل باللغة الإنجليزية'};
+  assert(kindleOffer.includes(kindleLabels[lang]),`English Kindle language disclosure in ${lang}`);
+  assert(kindleOffer.includes('id="kindle-edition"') && kindleOffer.includes('aria-labelledby="kindle-edition"'),`Labelled Kindle offer in ${lang}`);
+  assert(editionPage.indexOf(kindleOffer)>editionPage.indexOf(lang==='en'?'id="paperback-details"':'id="localized-book-details"'),`Kindle offer follows existing edition details in ${lang}`);
 }
 const ember=fs.readFileSync('dist/characters/ember/index.html','utf8');
 assert(ember.includes('<title>Ember, Elara’s Dragon Child | A Monster’s Mother</title>'),'Ember title must identify his role');
