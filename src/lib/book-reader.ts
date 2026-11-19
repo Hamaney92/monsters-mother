@@ -25,6 +25,15 @@ export function initBookReader(root:HTMLElement){
     showResume();
   };
   remember.addEventListener('change',save);if(remember.checked)save();else showResume();
+  const sync=()=>{
+    // Restoring an old page must not overwrite a newer bookmark or revocation.
+    try{place=parsePlace(localStorage.getItem(PLACE_KEY));}catch{place=null;}
+    remember.checked=!!place;
+    showResume();
+  };
+  addEventListener('storage',event=>{if(event.key===PLACE_KEY||event.key===null)sync();});
+  addEventListener('pageshow',event=>{if(event.persisted)sync();});
+  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')sync();});
   const text=root.querySelector<HTMLElement>('[data-chapter-text]');
   if(!text)return;
   const progress=root.querySelector<HTMLProgressElement>('[data-reader-progress]')!;

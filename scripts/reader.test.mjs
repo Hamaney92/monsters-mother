@@ -106,8 +106,11 @@ test('reader SEO does not count metadata spoofed in comments, scripts or the bod
 });
 test('remembering a chapter is opt-in and only offers useful resume links',()=>{
  const original=globalThis.localStorage;
+ const originalListener=globalThis.addEventListener,originalDocument=globalThis.document;
  const saved=new Map();
  globalThis.localStorage={getItem:key=>saved.get(key)||null,setItem:(key,value)=>saved.set(key,value),removeItem:key=>saved.delete(key)};
+ globalThis.addEventListener=()=>{};
+ globalThis.document={addEventListener(){}};
  const fixture=(chapter=19)=>{
   const remember={checked:false,listeners:{},addEventListener(name,fn){this.listeners[name]=fn;}};
   const resume={hidden:true,href:''};
@@ -128,5 +131,76 @@ test('remembering a chapter is opt-in and only offers useful resume links',()=>{
   a.remember.checked=false;a.remember.listeners.change();assert.equal(saved.size,0);assert.equal(a.resume.hidden,true);
   saved.set('mm.reading-place.v1',JSON.stringify({language:'tr',chapter:19,expires:Date.now()-1}));
   assert.equal(fixture().remember.checked,false);assert.equal(saved.size,0);
- }finally{if(original===undefined)delete globalThis.localStorage;else globalThis.localStorage=original;}
+ }finally{
+  if(original===undefined)delete globalThis.localStorage;else globalThis.localStorage=original;
+  if(originalListener===undefined)delete globalThis.addEventListener;else globalThis.addEventListener=originalListener;
+  if(originalDocument===undefined)delete globalThis.document;else globalThis.document=originalDocument;
+ }
+});
+
+test('open readers refresh bookmarks and revocations without writing stale places',()=>{
+ const originals=Object.fromEntries(['localStorage','addEventListener','document'].map(key=>[key,globalThis[key]]));
+ const key='mm.reading-place.v1',saved=new Map(),writes=[];
+ const listeners=new Map(),documentListeners=new Map();
+ const listen=(target,name,fn)=>target.set(name,[...(target.get(name)||[]),fn]);
+ const emit=(target,name,event={})=>{for(const fn of target.get(name)||[])fn(event);};
+ let blocked=false;
+ globalThis.localStorage={
+  getItem:key=>{if(blocked)throw new Error('Storage unavailable');return saved.get(key)||null;},
+  setItem:(key,value)=>{writes.push(['set',key,value]);saved.set(key,value);},
+  removeItem:key=>{writes.push(['remove',key]);saved.delete(key);}
+ };
+ globalThis.addEventListener=(name,fn)=>listen(listeners,name,fn);
+ globalThis.document={visibilityState:'visible',addEventListener:(name,fn)=>listen(documentListeners,name,fn)};
+ const put=chapter=>saved.set(key,JSON.stringify({language:'tr',chapter,expires:Date.now()+86400000}));
+ const fixture=(chapter=0)=>{
+  const remember={checked:false,listeners:{},addEventListener(name,fn){this.listeners[name]=fn;}};
+  const resume={hidden:true,href:''};
+  initBookReader({dataset:{language:'tr',chapter:String(chapter),readingBase:'/tr/read/book/'},querySelector(selector){return selector==='[data-remember-reading]'?remember:selector==='[data-resume-reading]'?resume:null;}});
+  return {remember,resume};
+ };
+ try{
+  put(19);const a=fixture(19),b=fixture();writes.length=0;
+  b.remember.checked=false;b.remember.listeners.change();
+  assert.equal(saved.has(key),false);assert.equal(writes.length,1);
+  emit(listeners,'storage',{key});
+  assert.equal(a.remember.checked,false);assert.equal(a.resume.hidden,true);
+  assert.equal(saved.has(key),false);assert.equal(writes.length,1);
+
+  writes.length=0;put(8);const raw=saved.get(key);
+  emit(listeners,'pageshow',{persisted:true});
+  assert.equal(a.remember.checked,true);assert.equal(a.resume.href,'/tr/read/book/8/');
+  assert.equal(b.resume.href,'/tr/read/book/8/');assert.equal(a.resume.hidden,false);
+  assert.equal(saved.get(key),raw);assert.deepEqual(writes,[]);
+
+  put(19);emit(listeners,'storage',{key});assert.equal(a.resume.hidden,true);
+  assert.equal(b.resume.href,'/tr/read/book/19/');assert.equal(b.resume.hidden,false);
+  saved.clear();emit(listeners,'storage',{key:null});
+  assert.equal(a.remember.checked,false);assert.equal(b.resume.hidden,true);
+  assert.deepEqual(writes,[]);
+
+  put(7);emit(listeners,'storage',{key:'unrelated'});
+  assert.equal(a.remember.checked,false);
+  emit(listeners,'pageshow',{persisted:false});assert.equal(a.remember.checked,false);
+  document.visibilityState='hidden';emit(documentListeners,'visibilitychange');assert.equal(a.remember.checked,false);
+  document.visibilityState='visible';emit(documentListeners,'visibilitychange');
+  assert.equal(a.remember.checked,true);assert.equal(a.resume.href,'/tr/read/book/7/');
+
+  saved.set(key,'{malformed');emit(listeners,'storage',{key});
+  assert.equal(a.remember.checked,false);assert.equal(a.resume.hidden,true);
+  assert.equal(saved.get(key),'{malformed');assert.deepEqual(writes,[]);
+  put(5);emit(listeners,'storage',{key});
+  saved.set(key,JSON.stringify({language:'tr',chapter:5,expires:Date.now()-1}));
+  emit(listeners,'pageshow',{persisted:true});
+  assert.equal(a.remember.checked,false);assert.equal(a.resume.hidden,true);
+  put(5);emit(listeners,'storage',{key});blocked=true;
+  emit(listeners,'pageshow',{persisted:true});
+  assert.equal(a.remember.checked,false);assert.equal(b.resume.hidden,true);
+  assert.equal(fixture().remember.checked,false);
+  assert.deepEqual(writes,[]);
+ }finally{
+  for(const [key,value] of Object.entries(originals)){
+   if(value===undefined)delete globalThis[key];else globalThis[key]=value;
+  }
+ }
 });
