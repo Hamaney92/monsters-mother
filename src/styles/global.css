@@ -52,3 +52,10 @@
 .language-switch{display:flex;gap:22px;justify-content:center;align-items:center;padding:12px 5%;background:#171512;border-bottom:1px solid var(--line);font-size:.8rem}.language-switch a{padding:5px 0;color:var(--muted)}.language-switch a[aria-current]{color:var(--copper);border-bottom:1px solid var(--copper)}html[lang=ar] body{font-family:Tahoma,Arial,sans-serif}html[lang=ar] h1,html[lang=ar] h2,html[lang=ar] h3{font-family:Tahoma,Arial,sans-serif;line-height:1.5}html[lang=ar] .eyebrow{letter-spacing:0}html[dir=rtl] .brand{direction:ltr}html[dir=rtl] .hero-content{text-align:right}html[dir=rtl] .hero-shade{background:linear-gradient(270deg,#111110ee,transparent),linear-gradient(0deg,#111110,transparent)}html[dir=rtl] .hero h1{font-size:clamp(3rem,6vw,6rem)}.localized-watch{max-width:1000px}@media(max-width:1200px){html:not([lang=en]) .desktop-nav{display:none}html:not([lang=en]) .menu-toggle{display:block}}@media(max-width:650px){.language-switch{gap:20px;font-size:.75rem}html[lang=ar] .hero h1{font-size:3.5rem}html[lang=ar] .page-heading h1{font-size:2.5rem}}
 
 html[lang=ar] .hero h1{font-family:'Cormorant Garamond',Georgia,serif;line-height:.95}html[dir=rtl] .hero-art{left:0;right:auto;mask-image:linear-gradient(to left,transparent,#000 24%);-webkit-mask-image:linear-gradient(to left,transparent,#000 24%)}html[dir=rtl] .hero-content .actions{margin-left:auto}@media(max-width:650px){html[dir=rtl] .hero-art{mask-image:none;-webkit-mask-image:none}}
+
+/* Let the compact header reflow when readers enlarge text. */
+@media(max-width:650px){
+  .header{height:auto;min-height:98px;flex-wrap:wrap;row-gap:8px}
+  .header .brand,.header .header-actions{min-inline-size:0}
+  .header .header-actions{max-inline-size:100%;flex-wrap:wrap}
+}
