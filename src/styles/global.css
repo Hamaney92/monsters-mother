@@ -59,3 +59,20 @@ html[lang=ar] .hero h1{font-family:'Cormorant Garamond',Georgia,serif;line-heigh
   .header .brand,.header .header-actions{min-inline-size:0}
   .header .header-actions{max-inline-size:100%;flex-wrap:wrap}
 }
+
+/* Keep localized home-page titles inside the viewport when browser text is enlarged. */
+@media(max-width:650px){
+  html:not([lang=ar]) .hero h1{font-size:clamp(2rem,15vw,6.4rem);max-inline-size:100%}
+  html[lang=fr] .intro h2{font-size:clamp(2rem,11vw,2.8rem);min-inline-size:0;max-inline-size:100%}
+  html:is([lang=en],[lang=fr],[lang=tr],[lang=ar]) .portal h2{font-size:clamp(1.5rem,15.2vw,2.7rem)}
+  html[lang=en] .portal h3{font-size:clamp(1.4rem,15.2vw,2.3rem)}
+}
+
+@media(min-width:651px) and (max-width:960px){
+  html:is([lang=fr],[lang=tr],[lang=ar]) .portal h2{font-size:clamp(1.4rem,3.2vw,2rem)}
+}
+
+@media(max-width:650px){
+  html[lang=ar] .hero h1{font-size:clamp(2rem,15vw,3.5rem)}
+  html[lang=tr] .discovery-guide h2{font-size:clamp(2rem,10vw,2.5rem);min-inline-size:0;max-inline-size:100%}
+}
